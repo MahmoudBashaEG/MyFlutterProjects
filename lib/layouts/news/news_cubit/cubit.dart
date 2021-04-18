@@ -25,12 +25,6 @@ class NewsCubit extends Cubit<NewsStates> {
     Economic(),
   ];
 
-  bool search = false;
-  void isSearch() {
-    search = !search;
-    emit(NewsSearchState());
-  }
-
   bool isDark = false;
   void changeMode() {
     isDark = !isDark;
@@ -99,6 +93,25 @@ class NewsCubit extends Cubit<NewsStates> {
       emit(NewsEconomicsSuccessState());
     }).catchError((error) {
       emit(NewsEconomicsErrorState());
+    });
+  }
+
+  List search = [];
+
+  void getSearch(String value) {
+    emit(NewsSearchLoadingState());
+
+    DioHelper.getData(
+      url: 'v2/everything',
+      query: {
+        'q': value,
+        'apiKey': '65f7f556ec76449fa7dc7c0069f040ca',
+      },
+    ).then((value) {
+      search = value.data['articles'];
+      emit(NewsSearchSuccessState());
+    }).catchError((error) {
+      emit(NewsSearchErrorState());
     });
   }
 }

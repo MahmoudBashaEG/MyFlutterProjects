@@ -247,3 +247,28 @@ Widget newsBuilder(List list) => ConditionalBuilder(
         child: CircularProgressIndicator(),
       ),
     );
+
+Widget newsSearchBuilder(List list) => ConditionalBuilder(
+      condition: list.length > 0,
+      builder: (context) => ListView.separated(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) => buildNewsItem(list[index]),
+        separatorBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            color: Colors.grey,
+            height: 1,
+          ),
+        ),
+        itemCount: list.length,
+      ),
+      fallback: (context) => Center(
+        child: Center(
+          child: Icon(
+            Icons.search,
+            size: 100,
+          ),
+        ),
+      ),
+    );

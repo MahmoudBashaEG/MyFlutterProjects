@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:news_app_api_cloud_db/Shared/Components/Components.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news_cubit/cubit.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news_cubit/states.dart';
+import 'package:news_app_api_cloud_db/modules/search.dart';
 
 class News extends StatelessWidget {
   @override
@@ -21,7 +22,8 @@ class News extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  NewsCubit.get(context).isSearch();
+                  NewsCubit.get(context).search = [];
+                  navigatorTo(context: context, goTo: Search());
                 },
                 icon: Icon(
                   Icons.search,
