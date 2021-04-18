@@ -22,4 +22,6 @@ class NewsEconomicsSuccessState extends NewsStates {}
 
 class NewsEconomicsErrorState extends NewsStates {}
 
+class NewsChangeModeState extends NewsStates {}
+
 class NewsSearchState extends NewsStates {}

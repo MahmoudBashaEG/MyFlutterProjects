@@ -31,6 +31,12 @@ class NewsCubit extends Cubit<NewsStates> {
     emit(NewsSearchState());
   }
 
+  bool isDark = false;
+  void changeMode() {
+    isDark = !isDark;
+    emit(NewsChangeModeState());
+  }
+
   void changeIndex(int index) {
     currentIndex = index;
     emit(NewsChangeBottomNavBarState());
@@ -38,10 +44,10 @@ class NewsCubit extends Cubit<NewsStates> {
 
   List business = [];
 
-  Future<void> getBusiness({String about}) {
+  void getBusiness({String about}) {
     emit(NewsBusinessLoadingState());
 
-    return DioHelper.getData(
+    DioHelper.getData(
       url: 'v2/top-headlines',
       query: {
         'country': 'eg',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:news_app_api_cloud_db/Shared/Components/Components.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news_cubit/cubit.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news_cubit/states.dart';
@@ -26,26 +27,16 @@ class News extends StatelessWidget {
                   Icons.search,
                 ),
               ),
+              IconButton(
+                icon: Icon(Icons.brightness_medium_rounded),
+                onPressed: () {
+                  NewsCubit.get(context).changeMode();
+                },
+              )
             ],
           ),
-          body: NewsCubit.get(context).search
-              ? Visibility(
-                  visible: NewsCubit.get(context).search,
-                  child: input(
-                    label: 'Search',
-                    onSubmitt: (value) {
-                      NewsCubit.get(context)
-                          .getBusiness(about: value)
-                          .then((value) {
-                        NewsCubit.get(context).isSearch();
-                      }).catchError((error) {});
-                    },
-                    controller: search,
-                    prefixIcon: Icons.search,
-                  ),
-                )
-              : NewsCubit.get(context)
-                  .screens[NewsCubit.get(context).currentIndex],
+          body: NewsCubit.get(context)
+              .screens[NewsCubit.get(context).currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: NewsCubit.get(context).currentIndex,

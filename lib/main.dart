@@ -6,6 +6,7 @@ import 'package:news_app_api_cloud_db/Shared/network/remote.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news.dart';
 import 'Shared/bloc_observer.dart';
 import 'layouts/news/news_cubit/cubit.dart';
+import 'layouts/news/news_cubit/states.dart';
 
 // main method in app
 void main() {
@@ -35,33 +36,62 @@ class MyApp extends StatelessWidget {
             ..getEconomics(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.teal,
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-              fontWeight: FontWeight.w800,
+      child: BlocConsumer<NewsCubit, NewsStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              brightness: Brightness.light,
+              primarySwatch: Colors.teal,
+              appBarTheme: AppBarTheme(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                titleTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w800,
+                ),
+                iconTheme: IconThemeData(
+                  color: Colors.black,
+                ),
+                backwardsCompatibility: false,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.dark,
+                ),
+              ),
             ),
-            iconTheme: IconThemeData(
-              color: Colors.black,
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              primarySwatch: Colors.teal,
+              appBarTheme: AppBarTheme(
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w800,
+                ),
+                iconTheme: IconThemeData(
+                  color: Colors.white,
+                ),
+                backwardsCompatibility: false,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.light,
+                ),
+              ),
             ),
-            backwardsCompatibility: false,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
+            themeMode: NewsCubit.get(context).isDark
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            home: Directionality(
+              textDirection: TextDirection.ltr,
+              child: News(),
             ),
-          ),
-        ),
-        home: Directionality(
-          textDirection: TextDirection.ltr,
-          child: News(),
-        ),
+          );
+        },
       ),
     );
   }
