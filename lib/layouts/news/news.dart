@@ -29,12 +29,6 @@ class News extends StatelessWidget {
                   Icons.search,
                 ),
               ),
-              IconButton(
-                icon: Icon(Icons.brightness_medium_rounded),
-                onPressed: () {
-                  NewsCubit.get(context).changeMode();
-                },
-              )
             ],
           ),
           body: NewsCubit.get(context)
@@ -63,6 +57,12 @@ class News extends StatelessWidget {
                   Icons.science,
                 ),
                 label: 'Economic',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings,
+                ),
+                label: 'Settings',
               ),
             ],
           ),

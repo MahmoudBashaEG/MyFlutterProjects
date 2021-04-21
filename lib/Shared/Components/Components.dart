@@ -265,10 +265,11 @@ Widget newsSearchBuilder(List list) => ConditionalBuilder(
       ),
       fallback: (context) => Center(
         child: Center(
-          child: Icon(
-            Icons.search,
-            size: 100,
+            child: Text(
+          'There Aren\'t Any Seraches',
+          style: TextStyle(
+            fontSize: 30,
           ),
-        ),
+        )),
       ),
     );

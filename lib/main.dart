@@ -2,27 +2,33 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app_api_cloud_db/Shared/network/remote.dart';
+import 'package:news_app_api_cloud_db/Shared/network/locale/locale.dart';
+import 'file:///C:/Users/MBasha/Desktop/news_app_api_cloud_db/lib/Shared/network/remote/remote.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news.dart';
 import 'Shared/bloc_observer.dart';
 import 'layouts/news/news_cubit/cubit.dart';
 import 'layouts/news/news_cubit/states.dart';
 
 // main method in app
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CashHelper.init();
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
 
-  // run my app method
-  // param is object from Widget class
-  runApp(MyApp());
-}
+  bool isDarkShPref = CashHelper.getData('isDark');
 
-// 1. stateless
-// 2. stateful
+  runApp(MyApp(
+    isDarkShPref: isDarkShPref,
+  ));
+}
 
 // main class extends widget
 class MyApp extends StatelessWidget {
+  MyApp({
+    this.isDarkShPref,
+  });
+  final bool isDarkShPref;
   // main method of class to build screen UI
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,8 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => NewsCubit()
             ..getBusiness()
             ..getSports()
-            ..getEconomics(),
+            ..getEconomics()
+            ..setIsDarkFromShPrefToHer(isDarkShPref),
         ),
       ],
       child: BlocConsumer<NewsCubit, NewsStates>(
