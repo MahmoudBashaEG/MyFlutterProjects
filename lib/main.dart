@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:news_app_api_cloud_db/Shared/network/locale/locale.dart';
 import 'file:///C:/Users/MBasha/Desktop/news_app_api_cloud_db/lib/Shared/network/remote/remote.dart';
 import 'package:news_app_api_cloud_db/layouts/news/news.dart';
@@ -15,11 +16,14 @@ void main() async {
   await CashHelper.init();
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
-
+  String userCountryNameShPref = CashHelper.getData('country');
+  String userCountryCodeShPref = CashHelper.getData('country');
   bool isDarkShPref = CashHelper.getData('isDark');
 
   runApp(MyApp(
     isDarkShPref: isDarkShPref,
+    userCountryNameShPref: userCountryNameShPref,
+    userCountryCodeShPref: userCountryCodeShPref,
   ));
 }
 
@@ -27,8 +31,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({
     this.isDarkShPref,
+    this.userCountryNameShPref,
+    this.userCountryCodeShPref,
   });
   final bool isDarkShPref;
+  final String userCountryNameShPref;
+  final String userCountryCodeShPref;
   // main method of class to build screen UI
   @override
   Widget build(BuildContext context) {
@@ -37,10 +45,11 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (BuildContext context) => NewsCubit()
-            ..getBusiness()
-            ..getSports()
-            ..getEconomics()
-            ..setIsDarkFromShPrefToHer(isDarkShPref),
+            ..changeCountryCode(userCountryCodeShPref)
+            ..getDataFromShPrefToHer(
+              isDarkPrefSh: isDarkShPref,
+              country: userCountryNameShPref,
+            ),
         ),
       ],
       child: BlocConsumer<NewsCubit, NewsStates>(

@@ -39,6 +39,25 @@ class Setting extends StatelessWidget {
                       'Country',
                       style: TextStyle(fontSize: 25),
                     )),
+                    DropdownButton(
+                      hint: Text('Countries'),
+                      value: NewsCubit.get(context).selectedUser,
+                      onChanged: (value) {
+                        NewsCubit.get(context).changeCountryName(value);
+                        print('change');
+                      },
+                      items: NewsCubit.get(context).country.map((value) {
+                        return DropdownMenuItem<String>(
+                          child: Text(value.countryName),
+                          value: value.countryCode,
+                          onTap: () {
+                            NewsCubit.get(context)
+                                .changeCountryCode(value.countryCode);
+                            print('tap');
+                          },
+                        );
+                      }).toList(),
+                    ),
                   ],
                 )
               ],

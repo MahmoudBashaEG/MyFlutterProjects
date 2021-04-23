@@ -31,3 +31,7 @@ class NewsSearchErrorState extends NewsStates {}
 class NewsChangeModeState extends NewsStates {}
 
 class NewsSearchState extends NewsStates {}
+
+class NewsChangeCountryNameState extends NewsStates {}
+
+class NewsChangeCountryCodeState extends NewsStates {}
