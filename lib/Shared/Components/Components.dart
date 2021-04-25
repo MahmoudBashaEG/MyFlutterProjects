@@ -7,7 +7,7 @@ import 'package:news_app_api_cloud_db/layouts/news/news_cubit/states.dart';
 import '../Consts.dart';
 
 //default Input with label
-Widget input({
+Widget defaultTextField({
   @required String label,
   @required TextEditingController controller,
   Function onChange,
@@ -28,6 +28,32 @@ Widget input({
         labelText: label,
         border: OutlineInputBorder(),
         suffixIcon: suffixIcon,
+      ),
+    );
+
+Widget defaultTextFormField({
+  @required String label,
+  @required TextEditingController controller,
+  Function onChange,
+  Function onTap,
+  TextInputType keyboardType,
+  @required IconData prefixIcon,
+  IconData suffix,
+  bool isPassword = false,
+  Function validate,
+}) =>
+    TextFormField(
+      onTap: onTap,
+      onChanged: onChange,
+      validator: validate,
+      obscureText: isPassword,
+      keyboardType: keyboardType,
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(prefixIcon),
+        suffixIcon: suffix != null ? Icon(suffix) : null,
+        labelText: label,
+        border: OutlineInputBorder(),
       ),
     );
 // this for default button
