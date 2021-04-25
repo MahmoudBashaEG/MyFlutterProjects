@@ -1,10 +1,36 @@
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/layouts/cubit/cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app_api_cloud_db/layouts/news/news_cubit/cubit.dart';
+import 'package:news_app_api_cloud_db/layouts/news/news_cubit/states.dart';
 
 import '../Consts.dart';
 
 //default Input with label
+Widget defaultTextField({
+  @required String label,
+  @required TextEditingController controller,
+  Function onChange,
+  Function onTap,
+  Function onSubmitt,
+  TextInputType keyboardType,
+  @required IconData prefixIcon,
+  Widget suffixIcon,
+}) =>
+    TextField(
+      onTap: onTap,
+      onChanged: onChange,
+      keyboardType: keyboardType,
+      controller: controller,
+      onSubmitted: onSubmitt,
+      decoration: InputDecoration(
+        prefixIcon: Icon(prefixIcon),
+        labelText: label,
+        border: OutlineInputBorder(),
+        suffixIcon: suffixIcon,
+      ),
+    );
+
 Widget defaultTextFormField({
   @required String label,
   @required TextEditingController controller,
@@ -185,101 +211,91 @@ Widget personInformation({
           )),
     );
 
-// Item Of todoApp
-Widget taskItem(Map item, context) => Dismissible(
-      onDismissed: (direction) {
-        BottomCubit.get(context).deleteDb(item['id']);
-      },
-      key: Key('${item['id']}'),
-      child: Padding(
-        padding: EdgeInsets.all(10),
+Widget buildNewsItem(Map item) => Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        height: 100,
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 35,
-              backgroundColor: Colors.green,
-              child: Text(
-                '${item['state']}',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+            Container(
+              width: 100,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      '${item['urlToImage']}',
+                    ),
+                    fit: BoxFit.cover,
+                  )),
             ),
-            spaceSizeBox(
+            SizedBox(
               width: 20,
             ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    item['title'],
-                    style: black25,
+                    '${item['title']}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      height: 1.3,
+                    ),
+                    maxLines: 3,
                   ),
-                  spaceSizeBox(height: 5),
-                  Text(
-                    item['date'],
-                    style: black25,
-                  )
+                  Spacer(),
+                  Text('${item['publishedAt']}'),
                 ],
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.assignment_turned_in_rounded),
-              color: Colors.lightGreen,
-              onPressed: () {
-                BottomCubit.get(context)
-                    .updateDb(state: 'done', id: item['id']);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.archive_outlined),
-              color: Colors.grey,
-              onPressed: () {
-                BottomCubit.get(context)
-                    .updateDb(state: 'archieved', id: item['id']);
-              },
             )
           ],
         ),
       ),
     );
 
-//Item of todoApp
-Widget itemBuilder(List list, context) => ConditionalBuilder(
-      condition: list != null,
-      builder: (context) => ConditionalBuilder(
-        condition: list.length > 0,
-        builder: (context) => ListView.separated(
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) => taskItem(list[index], context),
-          separatorBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Container(
-              width: double.infinity,
-              height: 1,
-              color: Colors.grey[600],
-            ),
-          ),
-          itemCount: list.length,
-        ),
-        fallback: (context) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.add_box_sharp,
-                size: 100,
-              ),
-              Text(
-                'No Tasks Here',
-                style: TextStyle(fontSize: 30, color: Colors.grey),
-              )
-            ],
+Widget newsBuilder(List list) => ConditionalBuilder(
+      condition: list.length > 0,
+      builder: (context) => ListView.separated(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) => buildNewsItem(list[index]),
+        separatorBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            color: Colors.grey,
+            height: 1,
           ),
         ),
+        itemCount: list.length,
       ),
-      fallback: (context) => Center(child: CircularProgressIndicator()),
+      fallback: (context) => Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+Widget newsSearchBuilder(List list) => ConditionalBuilder(
+      condition: list.length > 0,
+      builder: (context) => ListView.separated(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) => buildNewsItem(list[index]),
+        separatorBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            color: Colors.grey,
+            height: 1,
+          ),
+        ),
+        itemCount: list.length,
+      ),
+      fallback: (context) => Center(
+        child: Center(
+            child: Text(
+          'There Aren\'t Any Seraches',
+          style: TextStyle(
+            fontSize: 30,
+          ),
+        )),
+      ),
     );
