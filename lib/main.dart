@@ -17,7 +17,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
   String userCountryNameShPref = CashHelper.getData('country');
-  String userCountryCodeShPref = CashHelper.getData('country');
+  String userCountryCodeShPref = CashHelper.getData('countryCode');
   bool isDarkShPref = CashHelper.getData('isDark');
 
   runApp(MyApp(
