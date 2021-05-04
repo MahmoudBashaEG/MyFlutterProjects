@@ -23,4 +23,12 @@ class CashHelper {
   static Object getData(String key) {
     return sharedPreferences.get(key);
   }
+
+  static Future<bool> deleteData({@required String key}) {
+    return sharedPreferences.remove(key);
+  }
+
+  static Future<bool> deleteAllData() {
+    return sharedPreferences.clear();
+  }
 }

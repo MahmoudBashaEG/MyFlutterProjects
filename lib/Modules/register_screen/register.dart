@@ -95,7 +95,8 @@ class Register extends StatelessWidget {
                                 text: 'Register',
                                 press: () {
                                   if (formKey.currentState.validate()) {
-                                    RegisterCubit.get(context).post(
+                                    RegisterCubit.get(context).register(
+                                      context,
                                       url: REGISTER,
                                       data: {
                                         'name': name.text,

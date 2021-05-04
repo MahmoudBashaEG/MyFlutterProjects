@@ -3,10 +3,17 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_appp/Layout/cubit/cubit.dart';
+import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
+import 'package:flutter_appp/Modules/register_screen/register.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'Layout/app/app.dart';
 import 'Shared/bloc_observer.dart';
+import 'Shared/network/end_notes.dart';
+import 'Shared/network/locale/globalUserData.dart';
 import 'Shared/styles/colors.dart';
 import 'models/userInformation.dart';
 
@@ -14,22 +21,28 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
   await CashHelper.init();
-  var userData = CashHelper.getData('userData');
+  DioHelper.init();
+  bool isLoggedBefore;
+  var userData = CashHelper.getData('userLogInData');
   if (userData != null) {
-    UserModel userModel = UserModel.fromJson(jsonDecode(userData));
-    print(userModel.status);
-    print(userModel.message);
-    print(userModel.data.token);
+    allUserData = UserLogInModel.fromJson(jsonDecode(userData));
+    if (allUserData.status == true) {
+      isLoggedBefore = true;
+    } else {
+      isLoggedBefore = false;
+    }
   } else {
-    print('new user');
+    isLoggedBefore = false;
   }
 
-  DioHelper.init();
-
-  runApp(MyApp());
+  runApp(MyApp(
+    isLoggedBefore: isLoggedBefore,
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  final bool isLoggedBefore;
+  MyApp({this.isLoggedBefore});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,7 +68,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: LogIn(),
+      home: isLoggedBefore ? App() : LogIn(),
     );
   }
 }

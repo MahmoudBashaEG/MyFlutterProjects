@@ -1,6 +1,8 @@
 //default Input with label
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../styles/Consts.dart';
 
 Widget defaultTextField({
@@ -66,14 +68,15 @@ Widget defaultButton({
   @required String text,
   @required Function press,
   Color color = Colors.blue,
-  double padding = 5,
+  double padding = 4,
+  double fontSize = 25,
 }) =>
     MaterialButton(
       child: Text(
         text,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 30,
+          fontSize: fontSize,
         ),
       ),
       onPressed: press,
@@ -82,11 +85,6 @@ Widget defaultButton({
     );
 
 // this is for space with SizeBox
-Widget spaceSizeBox({double height, double width}) => SizedBox(
-      width: width,
-      height: height,
-    );
-
 // I used this with ListVIew widget to create any time of this function with changed type of data with the help of List type
 Widget contact(data) => Padding(
       padding: EdgeInsets.only(
@@ -105,7 +103,7 @@ Widget contact(data) => Padding(
               ),
             ),
           ),
-          spaceSizeBox(width: 25),
+          SizedBox(width: 25),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -135,16 +133,33 @@ Widget contact(data) => Padding(
 dynamic navigatorTo({@required BuildContext context, @required Widget goTo}) =>
     Navigator.push(context, MaterialPageRoute(builder: (context) => goTo));
 
-// dynamic navigatorToAndReplace({
-//   @required BuildContext context,
-//   @required Widget goTo,
-// }) =>
-//     Navigator.pushReplacement(context,);
+dynamic navigatorToAndReplace({
+  @required BuildContext context,
+  @required Widget goTo,
+}) =>
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => goTo));
 
 // Navigator pop
 /*this context in parameters is the context of the screen which i will leave back from it*/
 dynamic navigatorBack({@required BuildContext context}) =>
     Navigator.pop(context);
+
+//Message flutter toast
+dynamic message({
+  @required String message,
+  Color messageColor = Colors.white,
+  Color messageBgColor = Colors.red,
+}) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: messageBgColor,
+      textColor: messageColor,
+      fontSize: 16.0);
+}
 
 // BMI calculator Component
 Widget gender({
@@ -212,7 +227,7 @@ Widget personInformation({
                     onPressed: plus,
                     child: Icon(Icons.add),
                   ),
-                  spaceSizeBox(width: 10),
+                  SizedBox(width: 10),
                   FloatingActionButton(
                     onPressed: minus,
                     child: Icon(Icons.arrow_drop_down),
@@ -309,5 +324,78 @@ Widget newsSearchBuilder(List list) => ConditionalBuilder(
             fontSize: 30,
           ),
         )),
+      ),
+    );
+
+//------------------------------------------------------------------------------------------------------------------------------
+// Shop App Build categoryItem
+Widget categoryItem(Map<String, dynamic> item) {
+  return InkWell(
+    onTap: () {},
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 5,
+      ),
+      child: Container(
+        height: 90,
+        child: Row(
+          children: [
+            Container(
+              width: 90,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    item['image'],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(
+                item['name'],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 19,
+                ),
+              ),
+            ),
+            IconButton(
+                icon: FaIcon(FontAwesomeIcons.arrowRight), onPressed: () {})
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+// Shop app Category build item in home
+Widget categoryHome(item) => Container(
+      width: 110,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        fit: StackFit.loose,
+        children: [
+          Container(
+            height: 90,
+            child: Image(image: NetworkImage(item['image'])),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 3),
+            width: double.infinity,
+            height: 25,
+            color: Colors.grey,
+            child: Center(
+              child: Text(
+                item['name'],
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );

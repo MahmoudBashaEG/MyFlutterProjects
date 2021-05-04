@@ -1,8 +1,8 @@
-class UserModel {
+class UserLogInModel {
   bool status;
   String message;
   UserData data;
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserLogInModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? UserData.fromJson(json['data']) : null;

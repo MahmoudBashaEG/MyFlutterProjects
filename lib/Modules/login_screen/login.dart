@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_appp/Layout/app/app.dart';
 import 'package:flutter_appp/Modules/login_screen/logincubit.dart';
 import 'package:flutter_appp/Modules/login_screen/loginstates.dart';
 import 'package:flutter_appp/Modules/register_screen/register.dart';
@@ -83,7 +84,8 @@ class LogIn extends StatelessWidget {
                               text: 'Log In',
                               press: () {
                                 if (formKey.currentState.validate()) {
-                                  LogInCubit.get(context).post(
+                                  LogInCubit.get(context).logIn(
+                                    context,
                                     url: LOGIN,
                                     data: {
                                       'email': userEmail.text,
