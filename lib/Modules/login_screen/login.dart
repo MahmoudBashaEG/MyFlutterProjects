@@ -86,7 +86,6 @@ class LogIn extends StatelessWidget {
                                 if (formKey.currentState.validate()) {
                                   LogInCubit.get(context).logIn(
                                     context,
-                                    url: LOGIN,
                                     data: {
                                       'email': userEmail.text,
                                       'password': userPassword.text,

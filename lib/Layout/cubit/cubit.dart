@@ -9,11 +9,13 @@ import 'package:flutter_appp/Modules/home_screen/home.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
 import 'package:flutter_appp/Modules/settings_screen/setting.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
+import 'package:flutter_appp/Shared/network/end_notes.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
 import 'package:flutter_appp/models/categoryModel.dart';
-import 'package:flutter_appp/models/userprofiledata.dart';
+import 'package:flutter_appp/models/facouriteproducts.dart';
+import 'package:flutter_appp/models/home_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopCubit extends Cubit<ShopStates> {
@@ -33,22 +35,15 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ChangeBottomBarIndexState());
   }
 
-  UserProfileData userProfileData;
+  HomeData userProfileData;
 
-  void getProfileData({
-    @required String url,
-    Map<String, dynamic> query,
-    Map<String, dynamic> options,
-    String token,
-  }) {
+  void getProfileData() {
     emit(GetProfileDataLoadingState());
     DioHelper.getData(
-      query: query,
-      specialOptions: options,
-      url: url,
-      token: token,
+      url: HOME,
+      token: allUserData.data.token,
     ).then((value) {
-      userProfileData = UserProfileData.fromJson(value.data);
+      userProfileData = HomeData.fromJson(value.data);
       emit(GetProfileDataSuccessState());
     }).catchError((error) {
       print(error.toString());
@@ -58,16 +53,13 @@ class ShopCubit extends Cubit<ShopStates> {
 
   CategoryInformation categoryInformation;
 
-  void getCategoryData({
-    @required String url,
-    Map<String, dynamic> options,
-  }) {
+  void getCategoryData() {
     emit(GetCategoryDataLoadingState());
     DioHelper.getData(
       specialOptions: {
         'lang': 'en',
       },
-      url: url,
+      url: CATEGORIES,
     ).then((value) {
       categoryInformation = CategoryInformation.fromJson(value.data);
       emit(GetCategoryDataSuccessState());
@@ -77,63 +69,104 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
+  void updateProductFavorite({
+    int index,
+    int productId,
+  }) {
+    emit(UpdateFavoriteLoadingState());
+    DioHelper.postData(
+      token: allUserData.data.token,
+      data: {
+        "product_id": productId,
+      },
+      url: FAVORITE,
+    ).then((value) {
+      if (value.data['status']) {
+        message(message: value.data['message'], state: MessageType.Succeed);
+        userProfileData.data.products[index].inFavourite =
+            !userProfileData.data.products[index].inFavourite;
+        getProductFavorite();
+        emit(UpdateFavoriteSuccessState());
+      }
+    }).catchError((error) {
+      print(error.toString());
+      emit(UpdateFavoriteErrorState());
+    });
+  }
+
+  FavoriteData favoriteData;
+
+  void getProductFavorite() {
+    emit(GetFavoriteLoadingState());
+    DioHelper.getData(
+      url: FAVORITE,
+      token: allUserData.data.token,
+    ).then((value) {
+      print('favorite');
+      if (value.data['status'])
+        favoriteData = FavoriteData.fromJson(value.data['data']['data']);
+      emit(GetFavoriteSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(GetFavoriteErrorState());
+    });
+  }
+
   void updateProfileData({
-    @required String url,
     @required Map<String, dynamic> data,
-    @required String token,
   }) {
     emit(UpdateDataLoadingState());
     DioHelper.updateData(
-      url: url,
+      url: UPDATE,
       data: data,
-      token: token,
+      token: allUserData.data.token,
     ).then((value) {
       print(value.data);
       CashHelper.setData(key: 'userLogInData', value: jsonEncode(allUserData))
           .then((isSet) {
         if (isSet) {
-          message(
-            message: value.data['message'],
-            messageBgColor: Colors.green,
-          );
+          message(message: value.data['message'], state: MessageType.Succeed);
         }
       });
       emit(UpdateDataSuccessState());
     }).catchError((error) {
       print(error.toString());
+      message(
+        message: 'الرجاء التحقق من الانترنت',
+        state: MessageType.Error,
+      );
       emit(UpdateDataErrorState());
     });
   }
 
   Future<void> logOut(
     context, {
-    @required String url,
     Map<String, dynamic> data,
-    String token,
   }) {
     emit(LogOutLoadingState());
     return DioHelper.postData(
       data: data,
-      url: url,
-      token: token,
+      url: LOGOUT,
+      token: allUserData.data.token,
     ).then((value) {
-      message(
-        message: value.data['message'],
-        messageBgColor: Colors.green,
-      );
-      CashHelper.deleteData(
-        key: 'userLogInData',
-      ).then((isDelete) {
-        if (isDelete) {
-          navigatorToAndReplace(
-            context: context,
-            goTo: LogIn(),
-          );
-        }
-      });
+      message(message: value.data['message'], state: MessageType.Succeed);
+      if (value.data['status']) {
+        CashHelper.deleteData(
+          key: 'userLogInData',
+        ).then((isDelete) {
+          if (isDelete) {
+            navigatorToAndReplace(
+              context: context,
+              goTo: LogIn(),
+            );
+          }
+        });
+      }
+
       emit(LogOutSuccessState());
     }).catchError((error) {
       print(error.toString());
+      message(message: 'الرجاء التحقق من الانترنت', state: MessageType.Warning);
       emit(LogOutErrorState());
     });
   }

@@ -13,9 +13,11 @@ class CategoryInformation {
 
 class CategoryInformationData {
   int currentPage;
-  List data;
+  List data = [];
   CategoryInformationData.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
-    data = json['data'];
+    json['data'].forEach((element) {
+      data.add(element);
+    });
   }
 }

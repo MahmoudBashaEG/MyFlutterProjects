@@ -19,103 +19,96 @@ class Setting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ShopCubit(),
-      child: BlocConsumer<ShopCubit, ShopStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Form(
-                key: formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      defaultTextFormField(
-                        label: 'Name',
-                        controller: userName,
-                        prefixIcon: FontAwesomeIcons.personBooth,
-                        validate: 'Name Must Not Be Empty',
-                        keyboardType: TextInputType.text,
+    return BlocConsumer<ShopCubit, ShopStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    defaultTextFormField(
+                      label: 'Name',
+                      controller: userName,
+                      prefixIcon: FontAwesomeIcons.personBooth,
+                      validate: 'Name Must Not Be Empty',
+                      keyboardType: TextInputType.text,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    defaultTextFormField(
+                      label: 'Email',
+                      controller: userEmail,
+                      prefixIcon: FontAwesomeIcons.voicemail,
+                      validate: 'Email Must Not Be Empty',
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    defaultTextFormField(
+                      label: 'Phone',
+                      controller: userPhone,
+                      prefixIcon: FontAwesomeIcons.phone,
+                      validate: 'Phone Must Not Be Empty',
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    defaultTextFormField(
+                      label: 'Password',
+                      controller: userPassword,
+                      isPassword: true,
+                      prefixIcon: FontAwesomeIcons.lock,
+                      validate: 'Password Must Not Be Empty',
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: defaultButton(
+                        text: 'Update',
+                        press: () {
+                          if (formKey.currentState.validate()) {
+                            ShopCubit.get(context).updateProfileData(
+                              data: {
+                                "name": userName.text,
+                                "phone": userPhone.text,
+                                "email": userEmail.text,
+                                "password": userPassword.text,
+                              },
+                            );
+                          }
+                        },
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      defaultTextFormField(
-                        label: 'Email',
-                        controller: userEmail,
-                        prefixIcon: FontAwesomeIcons.voicemail,
-                        validate: 'Email Must Not Be Empty',
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      defaultTextFormField(
-                        label: 'Phone',
-                        controller: userPhone,
-                        prefixIcon: FontAwesomeIcons.phone,
-                        validate: 'Phone Must Not Be Empty',
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      defaultTextFormField(
-                        label: 'Password',
-                        controller: userPassword,
-                        isPassword: true,
-                        prefixIcon: FontAwesomeIcons.lock,
-                        validate: 'Password Must Not Be Empty',
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: defaultButton(
-                          text: 'Update',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: defaultButton(
+                          text: 'Log Out',
                           press: () {
-                            if (formKey.currentState.validate()) {
-                              ShopCubit.get(context).updateProfileData(
-                                url: UPDATE,
-                                token: allUserData.data.token,
-                                data: {
-                                  "name": userName.text,
-                                  "phone": userPhone.text,
-                                  "email": userEmail.text,
-                                  "password": userPassword.text,
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: defaultButton(
-                            text: 'Log Out',
-                            press: () {
-                              ShopCubit.get(context).logOut(
-                                context,
-                                url: LOGOUT,
-                                data: {
-                                  'fcm_token': 'SomeFcmToken',
-                                },
-                                token: allUserData.data.token,
-                              );
-                            }),
-                      )
-                    ],
-                  ),
+                            ShopCubit.get(context).logOut(
+                              context,
+                              data: {
+                                'fcm_token': 'SomeFcmToken',
+                              },
+                            );
+                          }),
+                    )
+                  ],
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

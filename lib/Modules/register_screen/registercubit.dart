@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/app/app.dart';
 import 'package:flutter_appp/Modules/register_screen/registerstates.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
+import 'package:flutter_appp/Shared/network/end_notes.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
@@ -19,18 +20,17 @@ class RegisterCubit extends Cubit<RegisterStates> {
   void register(
     context, {
     @required Map<String, dynamic> data,
-    @required url,
   }) {
     emit(RegisterLoadingState());
     DioHelper.postData(
-      url: url,
+      url: REGISTER,
       data: data,
     ).then((value) {
       if (value.data['status']) {
         allUserData = UserLogInModel.fromJson(value.data);
         message(
           message: value.data['message'],
-          messageBgColor: Colors.green,
+          state: MessageType.Succeed,
         );
         CashHelper.setData(key: 'userLogInData', value: jsonEncode(value.data))
             .then((value) {
@@ -42,7 +42,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         message(
           message: value.data['message'],
           messageColor: Colors.red,
-          messageBgColor: Colors.white,
+          state: MessageType.Error,
         );
       }
 
@@ -50,7 +50,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     }).catchError((error) {
       message(
         message: 'الرجاء التحقق من الاتصال بالانترنت',
-        messageBgColor: Colors.red,
+        state: MessageType.Error,
       );
       print(error.toString());
       emit(RegisterErrorState());

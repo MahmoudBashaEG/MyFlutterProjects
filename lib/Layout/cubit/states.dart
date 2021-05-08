@@ -22,6 +22,18 @@ class UpdateDataSuccessState extends ShopStates {}
 
 class UpdateDataErrorState extends ShopStates {}
 
+class UpdateFavoriteLoadingState extends ShopStates {}
+
+class UpdateFavoriteSuccessState extends ShopStates {}
+
+class UpdateFavoriteErrorState extends ShopStates {}
+
+class GetFavoriteLoadingState extends ShopStates {}
+
+class GetFavoriteSuccessState extends ShopStates {}
+
+class GetFavoriteErrorState extends ShopStates {}
+
 class LogOutLoadingState extends ShopStates {}
 
 class LogOutSuccessState extends ShopStates {}

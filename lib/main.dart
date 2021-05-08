@@ -4,16 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
-import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
-import 'package:flutter_appp/Modules/register_screen/register.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Layout/app/app.dart';
 import 'Shared/bloc_observer.dart';
-import 'Shared/network/end_notes.dart';
 import 'Shared/network/locale/globalUserData.dart';
+import 'Shared/styles/Consts.dart';
 import 'Shared/styles/colors.dart';
 import 'models/userInformation.dart';
 
@@ -45,30 +43,13 @@ class MyApp extends StatelessWidget {
   MyApp({this.isLoggedBefore});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: blueColor,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
-            fontWeight: FontWeight.w800,
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          backwardsCompatibility: false,
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark,
-          ),
-        ),
+    return BlocProvider(
+      create: (context) => ShopCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        home: isLoggedBefore ? App() : LogIn(),
       ),
-      home: isLoggedBefore ? App() : LogIn(),
     );
   }
 }

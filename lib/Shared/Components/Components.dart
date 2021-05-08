@@ -149,16 +149,26 @@ dynamic navigatorBack({@required BuildContext context}) =>
 dynamic message({
   @required String message,
   Color messageColor = Colors.white,
-  Color messageBgColor = Colors.red,
+  @required MessageType state,
 }) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: messageBgColor,
+      backgroundColor: messageState(state),
       textColor: messageColor,
       fontSize: 16.0);
+}
+
+enum MessageType { Error, Succeed, Warning }
+Color messageState(MessageType type) {
+  if (type == MessageType.Succeed)
+    return Colors.green;
+  else if (type == MessageType.Warning)
+    return Colors.amber;
+  else
+    return Colors.red;
 }
 
 // BMI calculator Component

@@ -4,3 +4,4 @@ const REGISTER = 'register';
 const HOME = 'home';
 const CATEGORIES = 'categories';
 const UPDATE = 'update-profile';
+const FAVORITE = 'favorites';
