@@ -1,6 +1,10 @@
 //default Input with label
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_appp/Layout/cubit/cubit.dart';
+import 'package:flutter_appp/Shared/styles/colors.dart';
+import 'package:flutter_appp/models/favoriteProducts.dart';
+import 'package:flutter_appp/models/searchModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../styles/Consts.dart';
@@ -351,16 +355,11 @@ Widget categoryItem(Map<String, dynamic> item) {
         height: 90,
         child: Row(
           children: [
-            Container(
-              width: 90,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    item['image'],
-                  ),
-                ),
-              ),
+            Image(
+              image: NetworkImage(item['image']),
+              width: 100,
+              height: 120,
+              fit: BoxFit.cover,
             ),
             SizedBox(
               width: 10,
@@ -407,5 +406,164 @@ Widget categoryHome(item) => Container(
             ),
           ),
         ],
+      ),
+    );
+//ShopApp  favorite build item
+Widget favoriteProductItemBuilder(ProductData product, context) => Container(
+      height: 130,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: [
+                Image(
+                  height: 120,
+                  width: 120,
+                  image: NetworkImage(product.image),
+                ),
+                if (product.discount != 0)
+                  Container(
+                    color: Colors.redAccent,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      'Discount ${product.discount} %',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  )
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${product.name}',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${product.price}',
+                          style: TextStyle(color: defaultColor),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        if (product.oldPrice != null)
+                          Text(
+                            '${product.oldPrice}',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        Spacer(),
+                        IconButton(
+                          icon: CircleAvatar(
+                            child: FaIcon(
+                              FontAwesomeIcons.heart,
+                              color: Colors.white,
+                              size: 17,
+                            ),
+                            backgroundColor:
+                                ShopCubit.get(context).favorites[product.id]
+                                    ? defaultColor
+                                    : Colors.grey,
+                            radius: 25,
+                          ),
+                          onPressed: () {
+                            ShopCubit.get(context)
+                                .updateProductFavorite(productId: product.id);
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+//ShopApp  search build item
+
+Widget searchItemBuilder(SearchProductData model, context) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        height: 110,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image(
+              height: 120,
+              width: 100,
+              image: NetworkImage(model.image),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    model.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Text(
+                        '${model.price}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Spacer(),
+                      IconButton(
+                        icon: CircleAvatar(
+                          child: FaIcon(
+                            FontAwesomeIcons.heart,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          radius: 25,
+                          backgroundColor:
+                              ShopCubit.get(context).favorites[model.id]
+                                  ? Colors.blue
+                                  : Colors.grey,
+                        ),
+                        onPressed: () {
+                          ShopCubit.get(context).updateProductFavorite(
+                            productId: model.id,
+                          );
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );

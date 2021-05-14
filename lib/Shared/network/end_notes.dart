@@ -5,3 +5,4 @@ const HOME = 'home';
 const CATEGORIES = 'categories';
 const UPDATE = 'update-profile';
 const FAVORITE = 'favorites';
+const SEARCH = 'products/search';

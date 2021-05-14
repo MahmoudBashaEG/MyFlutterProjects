@@ -15,17 +15,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ShopCubit cubit;
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        cubit = ShopCubit.get(context);
+        ShopCubit cubit = ShopCubit.get(context);
         return Scaffold(
           body: ConditionalBuilder(
             condition: state is! GetProfileDataLoadingState &&
                 cubit.userProfileData != null &&
                 cubit.categoryInformation != null,
-            builder: (context) => homeBuilder(cubit),
+            builder: (context) => homeBuilder(cubit, context),
             fallback: (context) => Center(
               child: CircularProgressIndicator(),
             ),
@@ -36,7 +35,7 @@ class Home extends StatelessWidget {
   }
 }
 
-Widget homeBuilder(ShopCubit cubit) => SingleChildScrollView(
+Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,8 +98,8 @@ Widget homeBuilder(ShopCubit cubit) => SingleChildScrollView(
                     mainAxisSpacing: 1,
                     children: List.generate(
                       cubit.userProfileData.data.products.length,
-                      (index) => productGridViewBuilder(
-                          cubit, cubit.userProfileData.data.products, index),
+                      (index) => productGridViewBuilder(cubit,
+                          cubit.userProfileData.data.products[index], context),
                     ),
                   ),
                 ),
@@ -112,7 +111,7 @@ Widget homeBuilder(ShopCubit cubit) => SingleChildScrollView(
     );
 
 Widget productGridViewBuilder(
-        ShopCubit cubit, List<GetHomeProductData> products, index) =>
+        ShopCubit cubit, GetHomeProductData product, context) =>
     Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -122,14 +121,14 @@ Widget productGridViewBuilder(
             Image(
               width: double.infinity,
               height: 180,
-              image: NetworkImage('${products[index].image}'),
+              image: NetworkImage(product.image),
             ),
-            if (products[index].discount != 0)
+            if (product.discount != 0)
               Container(
                 color: Colors.redAccent,
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Text(
-                  'Discount ${products[index].discount}%',
+                  'Discount ${product.discount}%',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -144,7 +143,7 @@ Widget productGridViewBuilder(
               children: [
                 Expanded(
                   child: Text(
-                    products[index].name,
+                    product.name,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                   ),
@@ -152,15 +151,15 @@ Widget productGridViewBuilder(
                 Row(
                   children: [
                     Text(
-                      '${products[index].price}',
+                      '${product.price}',
                       style: TextStyle(color: defaultColor),
                     ),
                     SizedBox(
                       width: 5,
                     ),
-                    if (products[index].oldPrice != null)
+                    if (product.oldPrice != null)
                       Text(
-                        '${products[index].oldPrice}',
+                        '${product.oldPrice}',
                         style: TextStyle(
                           color: Colors.grey,
                           decoration: TextDecoration.lineThrough,
@@ -168,16 +167,21 @@ Widget productGridViewBuilder(
                       ),
                     Spacer(),
                     IconButton(
-                      iconSize: 20,
-                      color: products[index].inFavourite
-                          ? Colors.blue
-                          : Colors.grey,
-                      icon: FaIcon(FontAwesomeIcons.heart),
+                      icon: CircleAvatar(
+                        child: FaIcon(
+                          FontAwesomeIcons.heart,
+                          color: Colors.white,
+                          size: 17,
+                        ),
+                        backgroundColor:
+                            ShopCubit.get(context).favorites[product.id]
+                                ? defaultColor
+                                : Colors.grey,
+                        radius: 25,
+                      ),
                       onPressed: () {
-                        cubit.updateProductFavorite(
-                          index: index,
-                          productId: products[index].id,
-                        );
+                        ShopCubit.get(context)
+                            .updateProductFavorite(productId: product.id);
                       },
                     )
                   ],

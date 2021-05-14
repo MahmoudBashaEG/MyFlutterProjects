@@ -41,7 +41,7 @@ class DioHelper {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': 'ar',
+            'lang': 'en',
             'Content-Type': 'application/json',
             if (token != null) 'Authorization': token,
           };
@@ -60,7 +60,7 @@ class DioHelper {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': 'ar',
+            'lang': 'en',
             'Content-Type': 'application/json',
             if (token != null) 'Authorization': token,
           };
@@ -79,7 +79,7 @@ class DioHelper {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': 'ar',
+            'lang': 'en',
             'Content-Type': 'application/json',
             if (token != null) 'Authorization': token,
           };

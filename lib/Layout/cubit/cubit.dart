@@ -14,8 +14,10 @@ import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
 import 'package:flutter_appp/models/categoryModel.dart';
-import 'package:flutter_appp/models/facouriteproducts.dart';
+import 'package:flutter_appp/models/favoriteProducts.dart';
+import 'package:flutter_appp/models/updateFavoriteProducts.dart';
 import 'package:flutter_appp/models/home_data.dart';
+import 'package:flutter_appp/models/searchModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopCubit extends Cubit<ShopStates> {
@@ -36,6 +38,7 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   HomeData userProfileData;
+  Map<int, bool> favorites = {};
 
   void getProfileData() {
     emit(GetProfileDataLoadingState());
@@ -44,6 +47,12 @@ class ShopCubit extends Cubit<ShopStates> {
       token: allUserData.data.token,
     ).then((value) {
       userProfileData = HomeData.fromJson(value.data);
+      userProfileData.data.products.forEach((element) {
+        favorites.addAll({
+          element.id: element.inFavourite,
+        });
+      });
+
       emit(GetProfileDataSuccessState());
     }).catchError((error) {
       print(error.toString());
@@ -69,11 +78,14 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
+  UpdateFavoriteProducts updateFavoriteProduct;
+
   void updateProductFavorite({
-    int index,
     int productId,
   }) {
-    emit(UpdateFavoriteLoadingState());
+    favorites[productId] = !favorites[productId];
+    emit(UpdateFavoriteSuccessState());
+
     DioHelper.postData(
       token: allUserData.data.token,
       data: {
@@ -81,20 +93,20 @@ class ShopCubit extends Cubit<ShopStates> {
       },
       url: FAVORITE,
     ).then((value) {
-      if (value.data['status']) {
-        message(message: value.data['message'], state: MessageType.Succeed);
-        userProfileData.data.products[index].inFavourite =
-            !userProfileData.data.products[index].inFavourite;
-        getProductFavorite();
-        emit(UpdateFavoriteSuccessState());
-      }
+      updateFavoriteProduct = UpdateFavoriteProducts.fromJson(value.data);
+      message(message: value.data['message'], state: MessageType.Succeed);
+      emit(UpdateFavoriteSuccessState());
+      if (!updateFavoriteProduct.status)
+        favorites[productId] = !favorites[productId];
+      getProductFavorite();
     }).catchError((error) {
       print(error.toString());
+      favorites[productId] = !favorites[productId];
       emit(UpdateFavoriteErrorState());
     });
   }
 
-  FavoriteData favoriteData;
+  FavoriteProductsData favoriteProductsData;
 
   void getProductFavorite() {
     emit(GetFavoriteLoadingState());
@@ -102,13 +114,40 @@ class ShopCubit extends Cubit<ShopStates> {
       url: FAVORITE,
       token: allUserData.data.token,
     ).then((value) {
-      print('favorite');
-      if (value.data['status'])
-        favoriteData = FavoriteData.fromJson(value.data['data']['data']);
+      favoriteProductsData = FavoriteProductsData.fromJson(value.data);
+      print(favoriteProductsData.favoriteProducts[0].image);
+      print(favoriteProductsData.favoriteProducts[0].name);
+      print(favoriteProductsData.favoriteProducts[0].price);
       emit(GetFavoriteSuccessState());
     }).catchError((error) {
       print(error.toString());
       emit(GetFavoriteErrorState());
+    });
+  }
+
+  SearchData searchResult;
+
+  void search({
+    @required String searchInput,
+    String onChangeValue,
+  }) {
+    emit(SearchLoadingState());
+    DioHelper.postData(
+      url: SEARCH,
+      token: allUserData.data.token,
+      data: {
+        'text': searchInput,
+      },
+    ).then((value) {
+      if (value.data['status'] && onChangeValue != '') {
+        searchResult = SearchData.fromJson(value.data['data']['data']);
+      } else {
+        searchResult = null;
+      }
+      emit(SearchSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(SearchErrorState());
     });
   }
 
