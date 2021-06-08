@@ -38,11 +38,15 @@ dependencies:
   fluttertoast: ^8.0.6
   carousel_pro: ^1.0.0
   flutter_rating_bar: ^4.0.0
+  image_picker: ^0.8.0
+
+
   #fire base
   firebase_core: ^1.1.1
   firebase_auth: ^1.1.4
   cloud_firestore: ^2.2.0
   google_sign_in: ^5.0.4
+  firebase_storage: ^8.1.0
 
 dev_dependencies:
   flutter_test:
@@ -75,10 +79,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  #  fonts:
-  #    - family: IconBroken
-  #      fonts:
-  #        - asset: assets\fonts\icons_broken.ttf
+  fonts:
+    - family: IconBroken
+      fonts:
+        - asset: android/assets/fonts/icons_broken.ttf
+    - family: Jannah
+      fonts:
+        - asset: android/assets/fonts/jannah_FontFamily.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

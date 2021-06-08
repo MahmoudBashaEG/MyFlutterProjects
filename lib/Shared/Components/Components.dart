@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:socialapp/Shared/styles/colors.dart';
+import 'package:socialapp/Shared/styles/icons_broken.dart';
 import '../styles/Consts.dart';
 
 Widget defaultTextField({
   @required String label,
+  String hint,
   @required TextEditingController controller,
   Function onChange,
   Function onTap,
   Function onSubmit,
   TextInputType keyboardType,
-  @required IconData prefixIcon,
+  IconData prefixIcon,
   IconData suffixIcon,
+  bool outlineBorder = true,
 }) =>
     TextField(
       onTap: onTap,
@@ -23,20 +26,22 @@ Widget defaultTextField({
       controller: controller,
       onSubmitted: onSubmit,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         labelText: label,
-        border: OutlineInputBorder(),
+        hintText: hint,
+        border: outlineBorder ? OutlineInputBorder() : null,
         suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
       ),
     );
 
 Widget defaultTextFormField({
-  @required String label,
+  String label,
+  String hint,
   @required TextEditingController controller,
   Function onChange,
   Function onTap,
   TextInputType keyboardType,
-  @required IconData prefixIcon,
+  IconData prefixIcon,
   IconData suffix,
   bool isPassword = false,
   @required String validate,
@@ -49,7 +54,7 @@ Widget defaultTextFormField({
       keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         suffixIcon: suffix != null
             ? IconButton(
                 icon: Icon(suffix),
@@ -57,6 +62,7 @@ Widget defaultTextFormField({
               )
             : null,
         labelText: label,
+        hintText: hint,
         border: OutlineInputBorder(),
       ),
       validator: (String value) {
@@ -131,6 +137,36 @@ Widget defaultButtonWithRadius({
     ),
   );
 }
+
+Widget myDivider() => Container(
+      width: double.infinity,
+      color: Colors.grey[300],
+      height: 1,
+    );
+
+Widget defaultAppBar({
+  @required BuildContext context,
+  String title,
+  bool centerTitle = false,
+  List<Widget> actions,
+}) =>
+    AppBar(
+      leading: IconButton(
+        icon: Icon(IconBroken.Arrow___Left_2),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      centerTitle: centerTitle,
+      titleSpacing: 5,
+      title: title != null
+          ? Text(
+              title,
+              style: Theme.of(context).textTheme.subtitle1,
+            )
+          : null,
+      actions: actions,
+    );
 
 // this is for space with SizeBox
 // I used this with ListVIew widget to create any time of this function with changed type of data with the help of List type

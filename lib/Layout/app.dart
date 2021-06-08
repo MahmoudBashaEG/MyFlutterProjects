@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Layout/Cubit/states.dart';
 import 'package:socialapp/Modules/EnterApp/login/login.dart';
-import 'package:socialapp/Modules/home/home_screen.dart';
+import 'package:socialapp/Modules/Post/post.dart';
 import 'package:socialapp/Shared/Components/Components.dart';
 import 'package:socialapp/Shared/styles/colors.dart';
 import 'package:socialapp/Shared/styles/icons_broken.dart';
@@ -21,6 +21,8 @@ class _SocialLayoutState extends State<SocialLayout> {
   void initState() {
     super.initState();
     SocialCubit.get(context).getUserData();
+    SocialCubit.get(context).getAllUsers();
+    SocialCubit.get(context).getPosts();
   }
 
   @override
@@ -29,33 +31,29 @@ class _SocialLayoutState extends State<SocialLayout> {
       listener: (context, state) {
         if (state is SocialLogOutSuccessState)
           navigatorToAndReplace(context: context, goTo: LogIn());
+        if (state is CreateNewPostState)
+          navigatorTo(context: context, goTo: CreatePost());
       },
       builder: (context, state) {
+        SocialCubit cubit = SocialCubit.get(context);
         return Scaffold(
           appBar: AppBar(
             leading: SizedBox(),
             centerTitle: true,
             title: Text(
-              SocialCubit.get(context)
-                  .titles[SocialCubit.get(context).currentIndex],
+              cubit.currentIndex > 2
+                  ? cubit.titles[cubit.currentIndex - 1]
+                  : cubit.titles[cubit.currentIndex],
               style: TextStyle(color: Colors.black),
             ),
             actions: [
-              state is SocialGetUserDataLoadingState
-                  ? CircularProgressIndicator()
-                  : TextButton(
-                      onPressed: () {
-                        SocialCubit.get(context).logOut();
-                      },
-                      child: Text(
-                        'LogOut',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
+              IconButton(icon: Icon(IconBroken.Notification), onPressed: () {}),
+              IconButton(icon: Icon(IconBroken.Search), onPressed: () {}),
             ],
           ),
-          body: SocialCubit.get(context)
-              .screens[SocialCubit.get(context).currentIndex],
+          body: cubit.currentIndex > 2
+              ? cubit.screens[cubit.currentIndex - 1]
+              : cubit.screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {
               SocialCubit.get(context).changeBottomNavIndex(index);
@@ -63,7 +61,7 @@ class _SocialLayoutState extends State<SocialLayout> {
             backgroundColor: Colors.white,
             selectedItemColor: defaultColor,
             unselectedItemColor:
-                Theme.of(context).primaryColorLight.withOpacity(.4),
+                Theme.of(context).primaryColorLight.withOpacity(.9),
             currentIndex: SocialCubit.get(context).currentIndex,
             items: [
               BottomNavigationBarItem(
@@ -71,15 +69,19 @@ class _SocialLayoutState extends State<SocialLayout> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(IconBroken.Home),
-                label: 'Friends',
+                icon: Icon(IconBroken.Chat),
+                label: 'Chats',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: 'Chat',
+                icon: Icon(IconBroken.Paper),
+                label: 'Post',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
+                icon: Icon(IconBroken.User),
+                label: 'Users',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Setting),
                 label: 'Settings',
               ),
             ],

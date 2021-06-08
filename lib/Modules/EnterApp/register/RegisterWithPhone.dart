@@ -51,8 +51,9 @@ class RegisterWithPhone extends StatelessWidget {
                         text: 'Send Code',
                         backgroundColor: defaultColor,
                         press: () {
-                          EnterCubit.get(context)
-                              .phoneAuth(number: phone.text.toString());
+                          EnterCubit.get(context).phoneAuth(
+                            number: phone.text,
+                          );
                         },
                       ),
                     SizedBox(
@@ -63,8 +64,7 @@ class RegisterWithPhone extends StatelessWidget {
                         text: 'Confirm',
                         backgroundColor: defaultColor,
                         press: () {
-                          EnterCubit.get(context)
-                              .phoneAuth(number: code.text.toString());
+                          EnterCubit.get(context).phoneAuth(code: code.text);
                         },
                       ),
                   ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Modules/EnterApp/EnterCubit.dart';
+import 'package:socialapp/Modules/EnterApp/login/login.dart';
 import 'package:socialapp/Modules/EnterApp/register/register.dart';
 import 'package:socialapp/Shared/network/locale/locale.dart';
 import 'package:socialapp/globalVariable.dart';

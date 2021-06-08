@@ -85,6 +85,7 @@ class EnterCubit extends Cubit<EnterStates> {
     );
   }
 
+  UserData userData;
   void registerEmail({
     @required String email,
     @required String password,
@@ -95,12 +96,17 @@ class EnterCubit extends Cubit<EnterStates> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      UserData userData = UserData(
+      userData = UserData(
         email: email,
         isVerified: value.user.emailVerified,
         name: name,
         uid: value.user.uid,
         phone: phone,
+        bio: 'write Your Bio',
+        cover:
+            'https://image.freepik.com/free-photo/photo-thoughtful-handsome-adult-european-man-holds-chin-looks-pensively-away-tries-solve-problem_273609-45891.jpg',
+        photo:
+            'https://image.freepik.com/free-photo/young-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-65212.jpg',
       );
 
       createUser(
@@ -140,28 +146,30 @@ class EnterCubit extends Cubit<EnterStates> {
     FirebaseAuth auth = FirebaseAuth.instance;
     emit(SignUpPhoneLoadingState());
     await auth.verifyPhoneNumber(
-      phoneNumber: '+90$number',
+      phoneNumber: number,
       verificationCompleted: (PhoneAuthCredential credential) async {
+        print(
+            'Doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         await auth.signInWithCredential(credential);
-        print('start');
-        emit(SignUpPhoneSuccessState());
       },
       verificationFailed: (FirebaseAuthException e) {
+        print(e.message);
         if (e.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid.');
           emit(SignUpPhoneErrorState());
         }
       },
       codeSent: (String verificationId, int resendToken) async {
+        emit(SignUpPhoneSuccessState());
         String smsCode = code;
         PhoneAuthCredential credential = PhoneAuthProvider.credential(
             verificationId: verificationId, smsCode: smsCode);
-        print('verified');
-        emit(SignUpPhoneSuccessState());
+        print(
+            'verifieddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
 
         await auth.signInWithCredential(credential);
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
+      timeout: Duration(seconds: 60),
     );
   }
 }
