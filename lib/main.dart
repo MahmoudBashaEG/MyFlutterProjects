@@ -1,32 +1,45 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Modules/EnterApp/EnterCubit.dart';
-import 'package:socialapp/Modules/EnterApp/login/login.dart';
 import 'package:socialapp/Modules/EnterApp/register/register.dart';
+import 'package:socialapp/Shared/Components/Components.dart';
 import 'package:socialapp/Shared/network/locale/locale.dart';
 import 'package:socialapp/globalVariable.dart';
 import 'Layout/app.dart';
 import 'Shared/bloc_observer.dart';
+import 'Shared/network/remote/Notification.dart';
 import 'Shared/styles/Consts.dart';
+
+Future<void> onBackGroundMessage(RemoteMessage messageBack) async {
+  message(message: 'backGround', state: MessageType.Succeed);
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
+  mobileToken = await FirebaseMessaging.instance.getToken();
+  Fcm.init();
   await CashHelper.init();
 
   Widget startScreen;
-  String uid = CashHelper.getData('uid');
-  if (uid == null) {
+  if (FirebaseAuth.instance.currentUser == null) {
     startScreen = Register();
   } else {
     // Global Variable Was used in SocialCubit Like A Token
-    userUid = uid;
+    globalUserData = FirebaseAuth.instance.currentUser;
     startScreen = SocialLayout();
   }
+
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    message(message: 'app is opened pro', state: MessageType.Succeed);
+  });
+  FirebaseMessaging.onBackgroundMessage(onBackGroundMessage);
 
   runApp(MyApp(
     startScreen: startScreen,

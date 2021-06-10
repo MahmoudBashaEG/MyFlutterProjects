@@ -66,4 +66,10 @@ class PostLikeSuccessState extends SocialStates {}
 
 class PostLikeErrorState extends SocialStates {}
 
+class SocialSendMessageSuccessState extends SocialStates {}
+
+class SocialSendMessageErrorState extends SocialStates {}
+
+class SocialGetMessagesSuccessState extends SocialStates {}
+
 class SocialLogOutErrorState extends SocialStates {}

@@ -8,29 +8,35 @@ import 'package:socialapp/Shared/styles/icons_broken.dart';
 import '../styles/Consts.dart';
 
 Widget defaultTextField({
-  @required String label,
+  String label,
   String hint,
   @required TextEditingController controller,
   Function onChange,
   Function onTap,
-  Function onSubmit,
   TextInputType keyboardType,
   IconData prefixIcon,
   IconData suffixIcon,
-  bool outlineBorder = true,
+  bool isPassword = false,
+  Function suffixIconOnPress,
+  bool isOutLinedInputBorder = true,
 }) =>
     TextField(
       onTap: onTap,
       onChanged: onChange,
+      obscureText: isPassword,
       keyboardType: keyboardType,
       controller: controller,
-      onSubmitted: onSubmit,
       decoration: InputDecoration(
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        suffixIcon: suffixIcon != null
+            ? IconButton(
+                icon: Icon(suffixIcon),
+                onPressed: suffixIconOnPress,
+              )
+            : null,
         labelText: label,
         hintText: hint,
-        border: outlineBorder ? OutlineInputBorder() : null,
-        suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+        border: isOutLinedInputBorder ? OutlineInputBorder() : null,
       ),
     );
 
@@ -42,10 +48,11 @@ Widget defaultTextFormField({
   Function onTap,
   TextInputType keyboardType,
   IconData prefixIcon,
-  IconData suffix,
+  IconData suffixIcon,
   bool isPassword = false,
   @required String validate,
   Function suffixIconOnPress,
+  bool isOutLinedInputBorder = true,
 }) =>
     TextFormField(
       onTap: onTap,
@@ -55,15 +62,15 @@ Widget defaultTextFormField({
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-        suffixIcon: suffix != null
+        suffixIcon: suffixIcon != null
             ? IconButton(
-                icon: Icon(suffix),
+                icon: Icon(suffixIcon),
                 onPressed: suffixIconOnPress,
               )
             : null,
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(),
+        border: isOutLinedInputBorder ? OutlineInputBorder() : null,
       ),
       validator: (String value) {
         if (value.isEmpty) return validate;

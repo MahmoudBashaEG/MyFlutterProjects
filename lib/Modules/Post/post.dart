@@ -81,15 +81,16 @@ class CreatePost extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
+                      style: TextStyle(
+                        height: 1.5,
+                      ),
+                      maxLines: 10000000000000,
                       controller: post,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Write Your Post',
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                   SizedBox(
                     height: 10,
@@ -101,9 +102,10 @@ class CreatePost extends StatelessWidget {
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  if (SocialCubit.get(context).postImage != null)
+                    SizedBox(
+                      height: 10,
+                    ),
                   Row(
                     children: [
                       Expanded(

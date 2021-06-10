@@ -35,7 +35,7 @@ class ChatScreen extends StatelessWidget {
         navigatorTo(
             context: context,
             goTo: ChatRoom(
-              name: userData.name,
+              model: userData,
             ));
       },
       child: Padding(

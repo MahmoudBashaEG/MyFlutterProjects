@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           body: ConditionalBuilder(
-            condition: SocialCubit.get(context).post.length == 0,
+            condition: SocialCubit.get(context).post == null,
             builder: (context) => Center(
               child: Text(
                 'There is No posts',
@@ -234,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                           width: 5,
                         ),
                         Text(
-                          '${SocialCubit.get(context).postsLike[index]}',
+                          '100',
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -281,7 +281,7 @@ class HomeScreen extends StatelessWidget {
                     hint: 'Write Comment',
                     controller: comment,
                     prefixIcon: null,
-                    outlineBorder: false,
+                    isOutLinedInputBorder: false,
                   ),
                 ),
                 Row(

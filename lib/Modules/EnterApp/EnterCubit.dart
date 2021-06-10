@@ -34,6 +34,7 @@ class EnterCubit extends Cubit<EnterStates> {
       password: password,
     )
         .then((value) {
+      globalUserData = value.user;
       emit(LogInEmailSuccessState(message: 'LogIn Succeeded'));
     }).catchError((error) {
       emit(LogInEmailErrorState(
@@ -96,22 +97,24 @@ class EnterCubit extends Cubit<EnterStates> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
+      globalUserData = value.user;
       userData = UserData(
         email: email,
-        isVerified: value.user.emailVerified,
+        isVerified: globalUserData.emailVerified,
         name: name,
-        uid: value.user.uid,
+        uid: globalUserData.uid,
         phone: phone,
         bio: 'write Your Bio',
         cover:
             'https://image.freepik.com/free-photo/photo-thoughtful-handsome-adult-european-man-holds-chin-looks-pensively-away-tries-solve-problem_273609-45891.jpg',
         photo:
             'https://image.freepik.com/free-photo/young-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-65212.jpg',
+        mobileToken: mobileToken,
       );
 
       createUser(
         succeededMessage: 'Register Succeeded',
-        uid: value.user.uid,
+        uid: globalUserData.uid,
         userData: userData.getMap(),
       );
     }).catchError((error) {
@@ -132,7 +135,6 @@ class EnterCubit extends Cubit<EnterStates> {
         .set(userData)
         .then((value) {
       CashHelper.setData(key: 'uid', value: uid);
-      userUid = uid;
       emit(CreateUserSuccessState(message: succeededMessage));
     }).catchError((error) {
       emit(CreateUserErrorState(error: error.toString()));

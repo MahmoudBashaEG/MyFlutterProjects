@@ -67,7 +67,7 @@ class LogIn extends StatelessWidget {
                         prefixIcon: Icons.lock,
                         keyboardType: TextInputType.visiblePassword,
                         isPassword: EnterCubit.get(context).isPassword,
-                        suffix: EnterCubit.get(context).isPassword
+                        suffixIcon: EnterCubit.get(context).isPassword
                             ? FontAwesomeIcons.eye
                             : FontAwesomeIcons.eyeSlash,
                         validate: 'password must not be empty',

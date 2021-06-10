@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,9 @@ import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Layout/Cubit/states.dart';
 import 'package:socialapp/Modules/EnterApp/login/login.dart';
 import 'package:socialapp/Modules/Post/post.dart';
+import 'package:socialapp/Modules/chat/chat_room.dart';
 import 'package:socialapp/Shared/Components/Components.dart';
+import 'package:socialapp/Shared/network/remote/Notification.dart';
 import 'package:socialapp/Shared/styles/colors.dart';
 import 'package:socialapp/Shared/styles/icons_broken.dart';
 
@@ -21,7 +24,6 @@ class _SocialLayoutState extends State<SocialLayout> {
   void initState() {
     super.initState();
     SocialCubit.get(context).getUserData();
-    SocialCubit.get(context).getAllUsers();
     SocialCubit.get(context).getPosts();
   }
 
@@ -47,8 +49,15 @@ class _SocialLayoutState extends State<SocialLayout> {
               style: TextStyle(color: Colors.black),
             ),
             actions: [
-              IconButton(icon: Icon(IconBroken.Notification), onPressed: () {}),
-              IconButton(icon: Icon(IconBroken.Search), onPressed: () {}),
+              IconButton(
+                  icon: Icon(IconBroken.Notification),
+                  onPressed: () {
+                    SocialCubit.get(context).logOut();
+                  }),
+              IconButton(
+                icon: Icon(IconBroken.Search),
+                onPressed: () {},
+              ),
             ],
           ),
           body: cubit.currentIndex > 2

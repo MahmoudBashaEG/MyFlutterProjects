@@ -5,6 +5,7 @@ class UserData {
   String cover;
   String photo;
   String bio;
+  String mobileToken;
   dynamic phone;
   bool isVerified;
 
@@ -14,6 +15,7 @@ class UserData {
     this.uid,
     this.cover,
     this.photo,
+    this.mobileToken,
     this.bio,
     this.phone,
     this.isVerified,
@@ -26,6 +28,7 @@ class UserData {
     photo = json['photo'];
     bio = json['bio'];
     phone = json['phone'];
+    mobileToken = json['mobileToken'];
     isVerified = json['isVerified'];
   }
 
@@ -39,6 +42,7 @@ class UserData {
       'cover': cover,
       'bio': bio,
       'photo': photo,
+      'mobileToken': mobileToken,
     };
   }
 }
