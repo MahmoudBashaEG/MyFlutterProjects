@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,11 +5,11 @@ import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Layout/Cubit/states.dart';
 import 'package:socialapp/Modules/EnterApp/login/login.dart';
 import 'package:socialapp/Modules/Post/post.dart';
-import 'package:socialapp/Modules/chat/chat_room.dart';
 import 'package:socialapp/Shared/Components/Components.dart';
 import 'package:socialapp/Shared/network/remote/Notification.dart';
 import 'package:socialapp/Shared/styles/colors.dart';
 import 'package:socialapp/Shared/styles/icons_broken.dart';
+import 'package:socialapp/globalVariable.dart';
 
 class SocialLayout extends StatefulWidget {
   const SocialLayout({Key key}) : super(key: key);
@@ -56,7 +55,13 @@ class _SocialLayoutState extends State<SocialLayout> {
                   }),
               IconButton(
                 icon: Icon(IconBroken.Search),
-                onPressed: () {},
+                onPressed: () {
+                  Fcm.sendNotification(
+                    token: mobileToken,
+                    senderName: 'ahmed',
+                    message: 'hello',
+                  );
+                },
               ),
             ],
           ),

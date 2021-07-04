@@ -7,7 +7,7 @@ import 'package:socialapp/Shared/Components/Components.dart';
 import 'package:socialapp/Shared/styles/icons_broken.dart';
 
 class CreatePost extends StatelessWidget {
-  TextEditingController post = TextEditingController();
+  final TextEditingController post = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

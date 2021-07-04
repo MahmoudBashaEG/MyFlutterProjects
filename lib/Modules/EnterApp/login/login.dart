@@ -105,7 +105,7 @@ class LogIn extends StatelessWidget {
                           text: 'LogIn With Google',
                           backgroundColor: defaultColor,
                           press: () {
-                            EnterCubit.get(context).signInWithGoogle();
+                            //EnterCubit.get(context).signInWithGoogle();
                           },
                         ),
                       if (state is LogInGoogleLoadingState)

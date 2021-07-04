@@ -7,10 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/Layout/Cubit/cubit.dart';
 import 'package:socialapp/Modules/EnterApp/EnterCubit.dart';
 import 'package:socialapp/Modules/EnterApp/register/register.dart';
-import 'package:socialapp/Shared/Components/Components.dart';
 import 'package:socialapp/Shared/network/locale/locale.dart';
 import 'package:socialapp/globalVariable.dart';
 import 'Layout/app.dart';
+import 'Shared/Components/Components.dart';
 import 'Shared/bloc_observer.dart';
 import 'Shared/network/remote/Notification.dart';
 import 'Shared/styles/Consts.dart';
@@ -24,6 +24,7 @@ void main() async {
   await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
   mobileToken = await FirebaseMessaging.instance.getToken();
+  print(mobileToken);
   Fcm.init();
   await CashHelper.init();
 
@@ -36,6 +37,9 @@ void main() async {
     startScreen = SocialLayout();
   }
 
+  FirebaseMessaging.onMessage.listen((event) {
+    message(message: 'OnMessage', state: MessageType.Succeed);
+  });
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
     message(message: 'app is opened pro', state: MessageType.Succeed);
   });
