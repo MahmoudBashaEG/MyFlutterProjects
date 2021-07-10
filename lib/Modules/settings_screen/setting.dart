@@ -3,7 +3,7 @@ import 'package:flutter_appp/Layout/cubit/cubit.dart';
 import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,39 +31,43 @@ class Setting extends StatelessWidget {
                 child: Column(
                   children: [
                     defaultTextFormField(
-                      label: 'Name',
+                      label: ShopCubit.get(context).translation.name,
                       controller: userName,
                       prefixIcon: FontAwesomeIcons.personBooth,
-                      validate: 'Name Must Not Be Empty',
+                      validate:
+                          ShopCubit.get(context).translation.nameValidator,
                       keyboardType: TextInputType.text,
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     defaultTextFormField(
-                      label: 'Email',
+                      label: ShopCubit.get(context).translation.email,
                       controller: userEmail,
                       prefixIcon: FontAwesomeIcons.voicemail,
-                      validate: 'Email Must Not Be Empty',
+                      validate:
+                          ShopCubit.get(context).translation.emailValidator,
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     defaultTextFormField(
-                      label: 'Phone',
+                      label: ShopCubit.get(context).translation.phone,
                       controller: userPhone,
                       prefixIcon: FontAwesomeIcons.phone,
-                      validate: 'Phone Must Not Be Empty',
+                      validate:
+                          ShopCubit.get(context).translation.phoneValidator,
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     defaultTextFormField(
-                      label: 'Password',
+                      label: ShopCubit.get(context).translation.password,
                       controller: userPassword,
                       isPassword: true,
                       prefixIcon: FontAwesomeIcons.lock,
-                      validate: 'Password Must Not Be Empty',
+                      validate:
+                          ShopCubit.get(context).translation.passwordValidator,
                     ),
                     SizedBox(
                       height: 20,
@@ -71,7 +75,7 @@ class Setting extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: defaultButton(
-                        text: 'Update',
+                        text: ShopCubit.get(context).translation.update,
                         press: () {
                           if (formKey.currentState.validate()) {
                             ShopCubit.get(context).updateProfileData(
@@ -92,7 +96,7 @@ class Setting extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: defaultButton(
-                          text: 'Log Out',
+                          text: ShopCubit.get(context).translation.LogOut,
                           press: () {
                             ShopCubit.get(context).logOut(
                               context,

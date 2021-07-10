@@ -6,7 +6,7 @@ import 'package:flutter_appp/Modules/register_screen/register.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 
 class LogIn extends StatelessWidget {
   @override
@@ -62,7 +62,7 @@ class LogIn extends StatelessWidget {
                           prefixIcon: Icons.lock,
                           keyboardType: TextInputType.visiblePassword,
                           isPassword: LogInCubit.get(context).isPassword,
-                          suffix: LogInCubit.get(context).isPassword
+                          suffixIcon: LogInCubit.get(context).isPassword
                               ? FontAwesomeIcons.eye
                               : FontAwesomeIcons.eyeSlash,
                           validate: 'password must not be empty',

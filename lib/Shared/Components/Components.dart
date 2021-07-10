@@ -1,49 +1,62 @@
 //default Input with label
 import 'package:conditional_builder/conditional_builder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
+import 'package:flutter_appp/Modules/category_products_screen/category_products.dart';
 import 'package:flutter_appp/Shared/styles/colors.dart';
+import 'package:flutter_appp/models/categoryModel.dart';
 import 'package:flutter_appp/models/favoriteProducts.dart';
-import 'package:flutter_appp/models/searchModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../styles/Consts.dart';
 
 Widget defaultTextField({
-  @required String label,
+  String label,
+  String hint,
   @required TextEditingController controller,
   Function onChange,
   Function onTap,
-  Function onSubmit,
   TextInputType keyboardType,
-  @required IconData prefixIcon,
+  IconData prefixIcon,
   IconData suffixIcon,
+  bool isPassword = false,
+  Function suffixIconOnPress,
+  bool isOutLinedInputBorder = true,
 }) =>
     TextField(
       onTap: onTap,
       onChanged: onChange,
+      obscureText: isPassword,
       keyboardType: keyboardType,
       controller: controller,
-      onSubmitted: onSubmit,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        suffixIcon: suffixIcon != null
+            ? IconButton(
+                icon: Icon(suffixIcon),
+                onPressed: suffixIconOnPress,
+              )
+            : null,
         labelText: label,
-        border: OutlineInputBorder(),
-        suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+        hintText: hint,
+        border: isOutLinedInputBorder ? OutlineInputBorder() : null,
       ),
     );
 
 Widget defaultTextFormField({
-  @required String label,
+  String label,
+  String hint,
   @required TextEditingController controller,
   Function onChange,
   Function onTap,
   TextInputType keyboardType,
-  @required IconData prefixIcon,
-  IconData suffix,
+  IconData prefixIcon,
+  IconData suffixIcon,
   bool isPassword = false,
   @required String validate,
   Function suffixIconOnPress,
+  bool isOutLinedInputBorder = true,
 }) =>
     TextFormField(
       onTap: onTap,
@@ -52,15 +65,16 @@ Widget defaultTextFormField({
       keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
-        suffixIcon: suffix != null
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        suffixIcon: suffixIcon != null
             ? IconButton(
-                icon: Icon(suffix),
+                icon: Icon(suffixIcon),
                 onPressed: suffixIconOnPress,
               )
             : null,
         labelText: label,
-        border: OutlineInputBorder(),
+        hintText: hint,
+        border: isOutLinedInputBorder ? OutlineInputBorder() : null,
       ),
       validator: (String value) {
         if (value.isEmpty) return validate;
@@ -74,18 +88,124 @@ Widget defaultButton({
   Color color = Colors.blue,
   double padding = 4,
   double fontSize = 25,
+  bool isFullWidth = true,
+  double width,
 }) =>
-    MaterialButton(
+    Container(
+      width: isFullWidth ? double.infinity : width,
+      child: MaterialButton(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: fontSize,
+          ),
+        ),
+        onPressed: press,
+        color: color,
+        padding: EdgeInsets.symmetric(vertical: padding),
+      ),
+    );
+
+Widget defaultButtonWithRadius({
+  @required String text,
+  @required Function press,
+  double width,
+  bool isFullWidth = true,
+  Color backgroundColor = Colors.red,
+  Color textColor = Colors.white,
+  TextAlign textAlign = TextAlign.center,
+  double paddingVertical = 10,
+  double shadowBlur = 10,
+  double shadowSpread = 1,
+}) {
+  return InkWell(
+    onTap: press,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: paddingVertical),
+      width: isFullWidth ? double.infinity : width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(20),
+          left: Radius.circular(20),
+        ),
+        color: backgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: backgroundColor.withOpacity(.3),
+            spreadRadius: shadowSpread,
+            blurRadius: shadowBlur,
+          ),
+        ],
+      ),
       child: Text(
         text,
+        textAlign: textAlign,
         style: TextStyle(
-          color: Colors.white,
-          fontSize: fontSize,
+          color: textColor,
         ),
       ),
-      onPressed: press,
-      color: color,
-      padding: EdgeInsets.symmetric(vertical: padding),
+    ),
+  );
+}
+
+class CupertinoSwitchButton extends StatelessWidget {
+  String name;
+  bool value;
+  Function onChanged;
+
+  CupertinoSwitchButton({this.name, this.value, this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          name,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        SizedBox(
+          width: 15,
+        ),
+        CupertinoSwitch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+}
+
+Widget myDivider() => Container(
+      width: double.infinity,
+      color: Colors.grey[300],
+      height: 1,
+    );
+
+Widget defaultAppBar({
+  @required BuildContext context,
+  String title,
+  bool centerTitle = false,
+  List<Widget> actions,
+}) =>
+    AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_forward_outlined),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      centerTitle: centerTitle,
+      titleSpacing: 5,
+      title: title != null
+          ? Text(
+              title,
+              style: Theme.of(context).textTheme.subtitle1,
+            )
+          : null,
+      actions: actions,
     );
 
 // this is for space with SizeBox
@@ -343,9 +463,11 @@ Widget newsSearchBuilder(List list) => ConditionalBuilder(
 
 //------------------------------------------------------------------------------------------------------------------------------
 // Shop App Build categoryItem
-Widget categoryItem(Map<String, dynamic> item) {
+Widget categoryItem(context, Category model) {
   return InkWell(
-    onTap: () {},
+    onTap: () {
+      navigatorTo(context: context, goTo: ProductsOfCategory());
+    },
     child: Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 15,
@@ -356,7 +478,7 @@ Widget categoryItem(Map<String, dynamic> item) {
         child: Row(
           children: [
             Image(
-              image: NetworkImage(item['image']),
+              image: NetworkImage(model.image),
               width: 100,
               height: 120,
               fit: BoxFit.cover,
@@ -366,7 +488,7 @@ Widget categoryItem(Map<String, dynamic> item) {
             ),
             Expanded(
               child: Text(
-                item['name'],
+                model.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 19,
@@ -383,7 +505,7 @@ Widget categoryItem(Map<String, dynamic> item) {
 }
 
 // Shop app Category build item in home
-Widget categoryHome(item) => Container(
+Widget categoryHome(Category model) => Container(
       width: 110,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -391,7 +513,7 @@ Widget categoryHome(item) => Container(
         children: [
           Container(
             height: 90,
-            child: Image(image: NetworkImage(item['image'])),
+            child: Image(image: NetworkImage(model.image)),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 3),
@@ -400,7 +522,7 @@ Widget categoryHome(item) => Container(
             color: Colors.grey,
             child: Center(
               child: Text(
-                item['name'],
+                model.name,
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -409,8 +531,15 @@ Widget categoryHome(item) => Container(
       ),
     );
 //ShopApp  favorite build item
-Widget favoriteProductItemBuilder(ProductData product, context) => Container(
-      height: 130,
+Widget favoriteCartProductItemBuilder(
+  context, {
+  dynamic product,
+  ShopCubit cubit,
+  @required bool isFavorite,
+  @required bool isCart,
+}) =>
+    Container(
+      height: 160,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -421,7 +550,7 @@ Widget favoriteProductItemBuilder(ProductData product, context) => Container(
               children: [
                 Image(
                   height: 120,
-                  width: 120,
+                  width: 110,
                   image: NetworkImage(product.image),
                 ),
                 if (product.discount != 0)
@@ -438,8 +567,7 @@ Widget favoriteProductItemBuilder(ProductData product, context) => Container(
             ),
             Expanded(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -450,8 +578,53 @@ Widget favoriteProductItemBuilder(ProductData product, context) => Container(
                         maxLines: 2,
                       ),
                     ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (isFavorite)
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            color: ShopCubit.get(context).inCarts[product.id]
+                                ? Colors.green
+                                : Colors.red,
+                            child: Text(
+                              'In Cart',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        if (isCart)
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            color:
+                                ShopCubit.get(context).inFavorites[product.id]
+                                    ? Colors.green
+                                    : Colors.red,
+                            child: Text(
+                              'In Favorite',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        Spacer(),
+                        if (!ShopCubit.get(context).inCarts[product.id])
+                          TextButton(
+                              onPressed: () {
+                                ShopCubit.get(context)
+                                    .updateProductCart(productId: product.id);
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${ShopCubit.get(context).translation.addToCart}',
+                                  ),
+                                  FaIcon(FontAwesomeIcons.shoppingCart)
+                                ],
+                              ))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '${product.price}',
@@ -469,24 +642,43 @@ Widget favoriteProductItemBuilder(ProductData product, context) => Container(
                             ),
                           ),
                         Spacer(),
-                        IconButton(
-                          icon: CircleAvatar(
-                            child: FaIcon(
-                              FontAwesomeIcons.heart,
-                              color: Colors.white,
-                              size: 17,
+                        if (isCart)
+                          IconButton(
+                            onPressed: () {
+                              ShopCubit.get(context)
+                                  .updateProductCart(productId: product.id);
+                            },
+                            icon: CircleAvatar(
+                              child: FaIcon(
+                                FontAwesomeIcons.shoppingCart,
+                                color: Colors.white,
+                                size: 17,
+                              ),
+                              backgroundColor:
+                                  ShopCubit.get(context).inCarts[product.id]
+                                      ? Colors.red
+                                      : Colors.grey[300],
+                              radius: 15,
                             ),
-                            backgroundColor:
-                                ShopCubit.get(context).favorites[product.id]
-                                    ? defaultColor
-                                    : Colors.grey,
-                            radius: 25,
                           ),
-                          onPressed: () {
-                            ShopCubit.get(context)
-                                .updateProductFavorite(productId: product.id);
-                          },
-                        )
+                        if (isFavorite)
+                          IconButton(
+                            icon: CircleAvatar(
+                              child: FaIcon(
+                                FontAwesomeIcons.heart,
+                                color: Colors.white,
+                                size: 17,
+                              ),
+                              backgroundColor: cubit.inFavorites[product.id]
+                                  ? Colors.red
+                                  : Colors.grey[300],
+                              radius: 15,
+                            ),
+                            onPressed: () {
+                              ShopCubit.get(context)
+                                  .updateProductFavorite(productId: product.id);
+                            },
+                          )
                       ],
                     ),
                   ],
@@ -499,7 +691,7 @@ Widget favoriteProductItemBuilder(ProductData product, context) => Container(
     );
 //ShopApp  search build item
 
-Widget searchItemBuilder(SearchProductData model, context) => Padding(
+Widget searchItemBuilder(dynamic model, context) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         height: 110,
@@ -547,16 +739,9 @@ Widget searchItemBuilder(SearchProductData model, context) => Padding(
                             color: Colors.white,
                           ),
                           radius: 25,
-                          backgroundColor:
-                              ShopCubit.get(context).favorites[model.id]
-                                  ? Colors.blue
-                                  : Colors.grey,
+                          backgroundColor: Colors.blue,
                         ),
-                        onPressed: () {
-                          ShopCubit.get(context).updateProductFavorite(
-                            productId: model.id,
-                          );
-                        },
+                        onPressed: () {},
                       )
                     ],
                   )

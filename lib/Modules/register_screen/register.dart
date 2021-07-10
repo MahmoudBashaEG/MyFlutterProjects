@@ -3,7 +3,7 @@ import 'package:flutter_appp/Modules/register_screen/registercubit.dart';
 import 'package:flutter_appp/Modules/register_screen/registerstates.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 
 class Register extends StatelessWidget {
   TextEditingController name = TextEditingController();
@@ -99,9 +99,9 @@ class Register extends StatelessWidget {
                                       context,
                                       data: {
                                         'name': name.text,
-                                        'phone': password.text,
+                                        'phone': phone.text,
                                         'email': email.text,
-                                        'password': phone.text,
+                                        'password': password.text,
                                         'image': '',
                                       },
                                     );

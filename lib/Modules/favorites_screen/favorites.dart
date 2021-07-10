@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
 import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/styles/colors.dart';
-import 'package:flutter_appp/models/favoriteProducts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Favorite extends StatelessWidget {
   @override
@@ -22,24 +19,28 @@ class Favorite extends StatelessWidget {
                     .length >
                 0,
             builder: (context) => ConditionalBuilder(
-              condition: state is! GetFavoriteLoadingState,
+              condition: state is! GetFavoriteLoadingState &&
+                  state is! UpdateFavoriteSuccessState,
               builder: (context) => ListView.builder(
                 itemCount: ShopCubit.get(context)
                     .favoriteProductsData
                     .favoriteProducts
                     .length,
-                itemBuilder: (context, index) => favoriteProductItemBuilder(
-                  ShopCubit.get(context)
+                itemBuilder: (context, index) => favoriteCartProductItemBuilder(
+                  context,
+                  cubit: ShopCubit.get(context),
+                  product: ShopCubit.get(context)
                       .favoriteProductsData
                       .favoriteProducts[index],
-                  context,
+                  isFavorite: true,
+                  isCart: false,
                 ),
               ),
-              fallback: (context) => Center(child: CircularProgressIndicator()),
+              fallback: (context) => LinearProgressIndicator(),
             ),
             fallback: (context) => Center(
               child: Text(
-                'No Data',
+                ShopCubit.get(context).translation.noFavorites,
                 style: TextStyle(fontSize: 20),
               ),
             ),

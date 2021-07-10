@@ -1,0 +1,52 @@
+class Translator {
+  String home;
+  String categories;
+  String products;
+  String favorites;
+  String noFavorites;
+  String carts;
+  String addToCart;
+  String noCarts;
+  String settings;
+  String search;
+  String noSearch;
+  String name;
+  String userName;
+  String email;
+  String phone;
+  String password;
+  String update;
+  String LogOut;
+  String LogIn;
+  String register;
+  String forgetPassword;
+  String nameValidator;
+  String emailValidator;
+  String phoneValidator;
+  String passwordValidator;
+  Translator.fromJson(Map<String, dynamic> json) {
+    home = json['home'];
+    categories = json['categories'];
+    products = json['products'];
+    favorites = json['favorites'];
+    noFavorites = json['noFavorites'];
+    carts = json['carts'];
+    addToCart = json['addToCart'];
+    noCarts = json['noCarts'];
+    settings = json['settings'];
+    search = json['search'];
+    noSearch = json['noSearch'];
+    name = json['name'];
+    userName = json['userName'];
+    email = json['email'];
+    phone = json['phone'];
+    password = json['password'];
+    update = json['update'];
+    LogOut = json['LogOut'];
+    LogIn = json['LogIn'];
+    nameValidator = json['nameValidator'];
+    emailValidator = json['emailValidator'];
+    phoneValidator = json['phoneValidator'];
+    passwordValidator = json['passwordValidator'];
+  }
+}

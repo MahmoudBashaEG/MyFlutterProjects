@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
@@ -12,7 +11,6 @@ import 'Layout/app/app.dart';
 import 'Shared/bloc_observer.dart';
 import 'Shared/network/locale/globalUserData.dart';
 import 'Shared/styles/Consts.dart';
-import 'Shared/styles/colors.dart';
 import 'models/userInformation.dart';
 
 void main() async {
@@ -21,6 +19,7 @@ void main() async {
   await CashHelper.init();
   DioHelper.init();
   bool isLoggedBefore;
+  lan = CashHelper.getData('lan');
   var userData = CashHelper.getData('userLogInData');
   if (userData != null) {
     allUserData = UserLogInModel.fromJson(jsonDecode(userData));
@@ -44,11 +43,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShopCubit(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        home: isLoggedBefore ? App() : LogIn(),
+      create: (context) => ShopCubit()..getTranslation(context),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: lightTheme,
+          home: isLoggedBefore ? App() : LogIn(),
+        ),
       ),
     );
   }

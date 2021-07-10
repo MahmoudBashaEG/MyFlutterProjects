@@ -1,0 +1,29 @@
+{
+  "home": "Home",
+  "categories": "Categories",
+  "products":"Products",
+  "favorites": "Favorites",
+  "carts": "Carts",
+  "noCarts": "No Carts",
+  "addToCart": "Add To Cart",
+  "noFavorites": "No Favorites",
+  "settings": "Settings",
+  "search": "Search",
+  "noSearch": "No Search",
+  "name":"Name",
+  "userName": "User Name",
+  "email":"Email",
+  "phone":"Phone",
+  "password":"Password",
+  "update": "Update",
+  "LogOut": "LogOut",
+  "LogIn": "LogIn",
+  "register": "Register",
+  "forgetPassword": "Forget Password",
+  "nameValidator": "Name Must Not Be Empty",
+  "emailValidator": "Email Must Not Be Empty",
+  "phoneValidator": "Phone Must Not Be Empty",
+  "passwordValidator": "Password Must Not Be Empty"
+
+
+}

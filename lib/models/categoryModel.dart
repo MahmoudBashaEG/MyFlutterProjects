@@ -17,7 +17,16 @@ class CategoryInformationData {
   CategoryInformationData.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     json['data'].forEach((element) {
-      data.add(element);
+      data.add(Category.fromJson(element));
     });
+  }
+}
+
+class Category {
+  String image;
+  String name;
+  Category.fromJson(Map<String, dynamic> json) {
+    image = json['image'];
+    name = json['name'];
   }
 }

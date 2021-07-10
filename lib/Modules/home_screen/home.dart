@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
 import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/styles/colors.dart';
 import 'package:flutter_appp/models/home_data.dart';
@@ -58,7 +58,7 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Categories',
+                  ShopCubit.get(context).translation.categories,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -81,7 +81,7 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
                   height: 10,
                 ),
                 Text(
-                  'Products',
+                  ShopCubit.get(context).translation.products,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -92,7 +92,7 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
                   child: GridView.count(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    childAspectRatio: 1 / 1.53,
+                    childAspectRatio: 1 / 1.6,
                     crossAxisCount: 2,
                     crossAxisSpacing: 1,
                     mainAxisSpacing: 1,
@@ -148,6 +148,9 @@ Widget productGridViewBuilder(
                     maxLines: 2,
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Text(
@@ -165,6 +168,27 @@ Widget productGridViewBuilder(
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        cubit.updateProductCart(productId: product.id);
+                      },
+                      icon: CircleAvatar(
+                        child: FaIcon(
+                          FontAwesomeIcons.shoppingCart,
+                          color: Colors.white,
+                          size: 17,
+                        ),
+                        backgroundColor:
+                            ShopCubit.get(context).inCarts[product.id]
+                                ? Colors.red
+                                : Colors.grey[300],
+                        radius: 15,
+                      ),
+                    ),
                     Spacer(),
                     IconButton(
                       icon: CircleAvatar(
@@ -174,10 +198,10 @@ Widget productGridViewBuilder(
                           size: 17,
                         ),
                         backgroundColor:
-                            ShopCubit.get(context).favorites[product.id]
-                                ? defaultColor
-                                : Colors.grey,
-                        radius: 25,
+                            ShopCubit.get(context).inFavorites[product.id]
+                                ? Colors.red
+                                : Colors.grey[300],
+                        radius: 15,
                       ),
                       onPressed: () {
                         ShopCubit.get(context)
@@ -185,7 +209,7 @@ Widget productGridViewBuilder(
                       },
                     )
                   ],
-                ),
+                )
               ],
             ),
           ),

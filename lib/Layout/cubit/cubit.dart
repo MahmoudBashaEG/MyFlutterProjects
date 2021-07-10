@@ -1,20 +1,24 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/states.dart';
+import 'package:flutter_appp/Modules/cart.dart';
 import 'package:flutter_appp/Modules/categories_screen/categories.dart';
 import 'package:flutter_appp/Modules/favorites_screen/favorites.dart';
 import 'package:flutter_appp/Modules/home_screen/home.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
 import 'package:flutter_appp/Modules/settings_screen/setting.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
+import 'package:flutter_appp/models/cartModel.dart';
 import 'package:flutter_appp/models/categoryModel.dart';
 import 'package:flutter_appp/models/favoriteProducts.dart';
+import 'package:flutter_appp/models/translate.dart';
 import 'package:flutter_appp/models/updateFavoriteProducts.dart';
 import 'package:flutter_appp/models/home_data.dart';
 import 'package:flutter_appp/models/searchModel.dart';
@@ -29,8 +33,33 @@ class ShopCubit extends Cubit<ShopStates> {
     Home(),
     Categories(),
     Favorite(),
+    Cart(),
     Setting(),
   ];
+  Translator translation;
+  void getTranslation(context) async {
+    emit(ShopAppTranslateLoadingState());
+    String data;
+    if (lan == 'en') {
+      print('en');
+      data = await DefaultAssetBundle.of(context)
+          .loadString("assets/translation/en.json");
+    }
+    if (lan == 'ar') {
+      print('ar');
+      data = await DefaultAssetBundle.of(context)
+          .loadString("assets/translation/ar.json");
+    }
+    final jsonResult = json.decode(data);
+    translation = Translator.fromJson(jsonResult);
+    emit(ShopAppTranslateSuccessState());
+    restartTheDataWithNewLanguage();
+  }
+
+  void changeLanguage(context, String language) {
+    lan = language;
+    getTranslation(context);
+  }
 
   void changeBottomBarIndex(int index) {
     bottomBarIndex = index;
@@ -38,18 +67,24 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   HomeData userProfileData;
-  Map<int, bool> favorites = {};
+  Map<int, bool> inFavorites = {};
+  Map<int, bool> inCarts = {};
 
   void getProfileData() {
     emit(GetProfileDataLoadingState());
     DioHelper.getData(
       url: HOME,
       token: allUserData.data.token,
+      lan: lan,
     ).then((value) {
       userProfileData = HomeData.fromJson(value.data);
+
       userProfileData.data.products.forEach((element) {
-        favorites.addAll({
+        inFavorites.addAll({
           element.id: element.inFavourite,
+        });
+        inCarts.addAll({
+          element.id: element.inCart,
         });
       });
 
@@ -65,10 +100,8 @@ class ShopCubit extends Cubit<ShopStates> {
   void getCategoryData() {
     emit(GetCategoryDataLoadingState());
     DioHelper.getData(
-      specialOptions: {
-        'lang': 'en',
-      },
       url: CATEGORIES,
+      lan: lan,
     ).then((value) {
       categoryInformation = CategoryInformation.fromJson(value.data);
       emit(GetCategoryDataSuccessState());
@@ -78,30 +111,51 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
+  FavoriteProductsData productsOfCategory;
+  void getProductsOfCategory({int id}) {
+    emit(GetProductsOfCategoryLoadingState());
+    DioHelper.getData(
+      url: PRODUCTS,
+      query: {'category_id': id},
+      lan: lan,
+      token: allUserData.data.token,
+    ).then((value) {
+      productsOfCategory = FavoriteProductsData.fromJson(value.data);
+      emit(GetProductsOfCategorySuccessState());
+    }).catchError((err) {
+      print(err.toString());
+      emit(GetProductsOfCategoryErrorState());
+    });
+  }
+
   UpdateFavoriteProducts updateFavoriteProduct;
 
   void updateProductFavorite({
     int productId,
   }) {
-    favorites[productId] = !favorites[productId];
+    inFavorites[productId] = !inFavorites[productId];
     emit(UpdateFavoriteSuccessState());
 
     DioHelper.postData(
-      token: allUserData.data.token,
-      data: {
-        "product_id": productId,
-      },
-      url: FAVORITE,
-    ).then((value) {
+            token: allUserData.data.token,
+            data: {
+              "product_id": productId,
+            },
+            url: FAVORITE,
+            lan: lan)
+        .then((value) {
       updateFavoriteProduct = UpdateFavoriteProducts.fromJson(value.data);
-      message(message: value.data['message'], state: MessageType.Succeed);
-      emit(UpdateFavoriteSuccessState());
+      if (updateFavoriteProduct.status) {
+        message(
+            message: updateFavoriteProduct.message, state: MessageType.Succeed);
+      }
+
       if (!updateFavoriteProduct.status)
-        favorites[productId] = !favorites[productId];
+        inFavorites[productId] = !inFavorites[productId];
       getProductFavorite();
     }).catchError((error) {
       print(error.toString());
-      favorites[productId] = !favorites[productId];
+      inFavorites[productId] = !inFavorites[productId];
       emit(UpdateFavoriteErrorState());
     });
   }
@@ -110,18 +164,54 @@ class ShopCubit extends Cubit<ShopStates> {
 
   void getProductFavorite() {
     emit(GetFavoriteLoadingState());
-    DioHelper.getData(
-      url: FAVORITE,
-      token: allUserData.data.token,
-    ).then((value) {
+    DioHelper.getData(url: FAVORITE, token: allUserData.data.token, lan: lan)
+        .then((value) {
       favoriteProductsData = FavoriteProductsData.fromJson(value.data);
-      print(favoriteProductsData.favoriteProducts[0].image);
-      print(favoriteProductsData.favoriteProducts[0].name);
-      print(favoriteProductsData.favoriteProducts[0].price);
       emit(GetFavoriteSuccessState());
     }).catchError((error) {
       print(error.toString());
       emit(GetFavoriteErrorState());
+    });
+  }
+
+  CartProductsData cartProductsData;
+
+  void getProductCart() {
+    emit(GetCartLoadingState());
+    DioHelper.getData(url: CART, token: allUserData.data.token, lan: lan)
+        .then((value) {
+      cartProductsData = CartProductsData.fromJson(value.data);
+      emit(GetCartSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(GetCartErrorState());
+    });
+  }
+
+  void updateProductCart({
+    int productId,
+  }) {
+    inCarts[productId] = !inCarts[productId];
+    emit(UpdateCartSuccessState());
+
+    DioHelper.postData(
+            token: allUserData.data.token,
+            data: {
+              "product_id": productId,
+            },
+            url: CART,
+            lan: lan)
+        .then((value) {
+      if (value.data['status']) {
+        message(message: value.data['message'], state: MessageType.Succeed);
+      }
+
+      if (!value.data['status']) inCarts[productId] = !inCarts[productId];
+      getProductCart();
+    }).catchError((error) {
+      print(error.toString());
+      inCarts[productId] = !inCarts[productId];
+      emit(UpdateCartErrorState());
     });
   }
 
@@ -133,12 +223,13 @@ class ShopCubit extends Cubit<ShopStates> {
   }) {
     emit(SearchLoadingState());
     DioHelper.postData(
-      url: SEARCH,
-      token: allUserData.data.token,
-      data: {
-        'text': searchInput,
-      },
-    ).then((value) {
+            url: SEARCH,
+            token: allUserData.data.token,
+            data: {
+              'text': searchInput,
+            },
+            lan: lan)
+        .then((value) {
       if (value.data['status'] && onChangeValue != '') {
         searchResult = SearchData.fromJson(value.data['data']['data']);
       } else {
@@ -156,10 +247,8 @@ class ShopCubit extends Cubit<ShopStates> {
   }) {
     emit(UpdateDataLoadingState());
     DioHelper.updateData(
-      url: UPDATE,
-      data: data,
-      token: allUserData.data.token,
-    ).then((value) {
+            url: UPDATE, data: data, token: allUserData.data.token, lan: lan)
+        .then((value) {
       print(value.data);
       CashHelper.setData(key: 'userLogInData', value: jsonEncode(allUserData))
           .then((isSet) {
@@ -194,6 +283,7 @@ class ShopCubit extends Cubit<ShopStates> {
           key: 'userLogInData',
         ).then((isDelete) {
           if (isDelete) {
+            bottomBarIndex = 0;
             navigatorToAndReplace(
               context: context,
               goTo: LogIn(),
@@ -208,5 +298,12 @@ class ShopCubit extends Cubit<ShopStates> {
       message(message: 'الرجاء التحقق من الانترنت', state: MessageType.Warning);
       emit(LogOutErrorState());
     });
+  }
+
+  void restartTheDataWithNewLanguage() {
+    this.getCategoryData();
+    this.getProductCart();
+    this.getProductFavorite();
+    this.getProfileData();
   }
 }

@@ -18,14 +18,13 @@ class DioHelper {
     Map<String, dynamic> query,
     Map<String, dynamic> specialOptions,
     String token,
-    String lan,
   }) async {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': lan ?? 'en',
+            'lang': 'en',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': token,
+            'Authorization': token ?? '',
           };
     return await dio.get(
       url,
@@ -38,14 +37,13 @@ class DioHelper {
     @required Map<String, dynamic> data,
     Map<String, dynamic> specialOptions,
     String token,
-    String lan,
   }) async {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': lan ?? 'en',
+            'lang': 'en',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': token,
+            'Authorization': token ?? '',
           };
     return await dio.post(
       url,
@@ -58,14 +56,13 @@ class DioHelper {
     @required Map<String, dynamic> data,
     Map<String, dynamic> specialOptions,
     String token,
-    String lan,
   }) async {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': lan ?? 'en',
+            'lang': 'en',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': token,
+            'Authorization': token ?? '',
           };
     return await dio.put(
       url,
@@ -78,14 +75,13 @@ class DioHelper {
     @required Map<String, dynamic> data,
     Map<String, dynamic> specialOptions,
     String token,
-    String lan,
   }) async {
     dio.options.headers = specialOptions != null
         ? specialOptions
         : {
-            'lang': lan ?? 'en',
+            'lang': 'en',
             'Content-Type': 'application/json',
-            if (token != null) 'Authorization': token,
+            'Authorization': token ?? '',
           };
     return await dio.delete(
       url,

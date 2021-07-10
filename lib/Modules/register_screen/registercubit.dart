@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/app/app.dart';
 import 'package:flutter_appp/Modules/register_screen/registerstates.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
@@ -25,13 +25,15 @@ class RegisterCubit extends Cubit<RegisterStates> {
     DioHelper.postData(
       url: REGISTER,
       data: data,
-    ).then((value) {
+    ).then((value) async {
+      print(value.data);
       if (value.data['status']) {
         allUserData = UserLogInModel.fromJson(value.data);
         message(
           message: value.data['message'],
           state: MessageType.Succeed,
         );
+        await CashHelper.setData(key: 'lan', value: 'en');
         CashHelper.setData(key: 'userLogInData', value: jsonEncode(value.data))
             .then((value) {
           if (value) {
@@ -41,8 +43,8 @@ class RegisterCubit extends Cubit<RegisterStates> {
       } else {
         message(
           message: value.data['message'],
-          messageColor: Colors.red,
-          state: MessageType.Error,
+          messageColor: Colors.white,
+          state: MessageType.Warning,
         );
       }
 

@@ -28,7 +28,7 @@ class Search extends StatelessWidget {
             child: Column(
               children: [
                 defaultTextField(
-                  label: 'Search',
+                  label: ShopCubit.get(context).translation.search,
                   controller: search,
                   prefixIcon: FontAwesomeIcons.search,
                   onChange: (String value) {
@@ -66,7 +66,9 @@ class Search extends StatelessWidget {
                       fallback: (context) =>
                           Center(child: CircularProgressIndicator()),
                     ),
-                    fallback: (context) => Center(child: Text('No Search')),
+                    fallback: (context) => Center(
+                        child:
+                            Text(ShopCubit.get(context).translation.noSearch)),
                   ),
                 )
               ],

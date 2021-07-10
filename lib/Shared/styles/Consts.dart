@@ -14,32 +14,41 @@ const TextStyle black35 = TextStyle(
   fontSize: 35,
 );
 ThemeData lightTheme = ThemeData(
-  textTheme: TextTheme(
+    textTheme: TextTheme(
       bodyText1: TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 30,
-  )),
-  scaffoldBackgroundColor: Colors.white,
-  brightness: Brightness.light,
-  primarySwatch: defaultColor,
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.transparent,
-    elevation: 0.0,
-    titleTextStyle: TextStyle(
-      color: Colors.black,
-      fontSize: 20.0,
-      fontWeight: FontWeight.w800,
+        fontFamily: 'Jannah',
+        fontWeight: FontWeight.bold,
+        fontSize: 30,
+      ),
+      subtitle1: TextStyle(
+        fontFamily: 'jannah',
+        fontSize: 15,
+        color: Colors.black,
+      ),
     ),
-    iconTheme: IconThemeData(
-      color: Colors.black,
+    scaffoldBackgroundColor: Colors.white,
+    brightness: Brightness.light,
+    primarySwatch: defaultColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+        fontWeight: FontWeight.w800,
+      ),
+      iconTheme: IconThemeData(
+        color: Colors.black,
+      ),
+      backwardsCompatibility: false,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
     ),
-    backwardsCompatibility: false,
-    systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: defaultColor,
     ),
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      type: BottomNavigationBarType.fixed, backgroundColor: Colors.red),
-);
+    fontFamily: 'Jannah');
 // ThemeData darkTheme = ;

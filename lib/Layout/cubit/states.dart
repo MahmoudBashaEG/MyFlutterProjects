@@ -2,6 +2,10 @@ abstract class ShopStates {}
 
 class ShopInitState extends ShopStates {}
 
+class ShopAppTranslateSuccessState extends ShopStates {}
+
+class ShopAppTranslateLoadingState extends ShopStates {}
+
 class ChangeBottomBarIndexState extends ShopStates {}
 
 class GetProfileDataLoadingState extends ShopStates {}
@@ -16,6 +20,12 @@ class GetCategoryDataSuccessState extends ShopStates {}
 
 class GetCategoryDataErrorState extends ShopStates {}
 
+class GetProductsOfCategoryLoadingState extends ShopStates {}
+
+class GetProductsOfCategorySuccessState extends ShopStates {}
+
+class GetProductsOfCategoryErrorState extends ShopStates {}
+
 class UpdateDataLoadingState extends ShopStates {}
 
 class UpdateDataSuccessState extends ShopStates {}
@@ -28,11 +38,23 @@ class UpdateFavoriteSuccessState extends ShopStates {}
 
 class UpdateFavoriteErrorState extends ShopStates {}
 
+class UpdateCartLoadingState extends ShopStates {}
+
+class UpdateCartSuccessState extends ShopStates {}
+
+class UpdateCartErrorState extends ShopStates {}
+
 class GetFavoriteLoadingState extends ShopStates {}
 
 class GetFavoriteSuccessState extends ShopStates {}
 
 class GetFavoriteErrorState extends ShopStates {}
+
+class GetCartLoadingState extends ShopStates {}
+
+class GetCartSuccessState extends ShopStates {}
+
+class GetCartErrorState extends ShopStates {}
 
 class SearchLoadingState extends ShopStates {}
 

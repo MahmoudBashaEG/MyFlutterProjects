@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/app/app.dart';
 import 'package:flutter_appp/Modules/login_screen/loginstates.dart';
 import 'package:flutter_appp/Shared/Components/Components.dart';
-import 'package:flutter_appp/Shared/network/end_notes.dart';
+import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
