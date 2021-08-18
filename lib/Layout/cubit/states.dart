@@ -1,3 +1,5 @@
+import 'package:flutter_appp/models/categoryModel.dart';
+
 abstract class ShopStates {}
 
 class ShopInitState extends ShopStates {}
@@ -20,11 +22,14 @@ class GetCategoryDataSuccessState extends ShopStates {}
 
 class GetCategoryDataErrorState extends ShopStates {}
 
-class GetProductsOfCategoryLoadingState extends ShopStates {}
+class GetCategoryProductsLoadingState extends ShopStates {}
 
-class GetProductsOfCategorySuccessState extends ShopStates {}
+class GetCategoryProductsSuccessState extends ShopStates {
+  Category category;
+  GetCategoryProductsSuccessState({this.category});
+}
 
-class GetProductsOfCategoryErrorState extends ShopStates {}
+class GetCategoryProductsErrorState extends ShopStates {}
 
 class UpdateDataLoadingState extends ShopStates {}
 

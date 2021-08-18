@@ -22,91 +22,95 @@ class Setting extends StatelessWidget {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    defaultTextFormField(
-                      label: ShopCubit.get(context).translation.name,
-                      controller: userName,
-                      prefixIcon: FontAwesomeIcons.personBooth,
-                      validate:
-                          ShopCubit.get(context).translation.nameValidator,
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    defaultTextFormField(
-                      label: ShopCubit.get(context).translation.email,
-                      controller: userEmail,
-                      prefixIcon: FontAwesomeIcons.voicemail,
-                      validate:
-                          ShopCubit.get(context).translation.emailValidator,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    defaultTextFormField(
-                      label: ShopCubit.get(context).translation.phone,
-                      controller: userPhone,
-                      prefixIcon: FontAwesomeIcons.phone,
-                      validate:
-                          ShopCubit.get(context).translation.phoneValidator,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    defaultTextFormField(
-                      label: ShopCubit.get(context).translation.password,
-                      controller: userPassword,
-                      isPassword: true,
-                      prefixIcon: FontAwesomeIcons.lock,
-                      validate:
-                          ShopCubit.get(context).translation.passwordValidator,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: defaultButton(
-                        text: ShopCubit.get(context).translation.update,
-                        press: () {
-                          if (formKey.currentState.validate()) {
-                            ShopCubit.get(context).updateProfileData(
-                              data: {
-                                "name": userName.text,
-                                "phone": userPhone.text,
-                                "email": userEmail.text,
-                                "password": userPassword.text,
-                              },
-                            );
-                          }
-                        },
+        return Directionality(
+          textDirection: lan == 'en' ? TextDirection.ltr : TextDirection.rtl,
+          child: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      defaultTextFormField(
+                        label: ShopCubit.get(context).translation.name,
+                        controller: userName,
+                        prefixIcon: FontAwesomeIcons.personBooth,
+                        validate:
+                            ShopCubit.get(context).translation.nameValidator,
+                        keyboardType: TextInputType.text,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: defaultButton(
-                          text: ShopCubit.get(context).translation.LogOut,
+                      SizedBox(
+                        height: 20,
+                      ),
+                      defaultTextFormField(
+                        label: ShopCubit.get(context).translation.email,
+                        controller: userEmail,
+                        prefixIcon: FontAwesomeIcons.voicemail,
+                        validate:
+                            ShopCubit.get(context).translation.emailValidator,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      defaultTextFormField(
+                        label: ShopCubit.get(context).translation.phone,
+                        controller: userPhone,
+                        prefixIcon: FontAwesomeIcons.phone,
+                        validate:
+                            ShopCubit.get(context).translation.phoneValidator,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      defaultTextFormField(
+                        label: ShopCubit.get(context).translation.password,
+                        controller: userPassword,
+                        isPassword: true,
+                        prefixIcon: FontAwesomeIcons.lock,
+                        validate: ShopCubit.get(context)
+                            .translation
+                            .passwordValidator,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: defaultButton(
+                          text: ShopCubit.get(context).translation.update,
                           press: () {
-                            ShopCubit.get(context).logOut(
-                              context,
-                              data: {
-                                'fcm_token': 'SomeFcmToken',
-                              },
-                            );
-                          }),
-                    )
-                  ],
+                            if (formKey.currentState.validate()) {
+                              ShopCubit.get(context).updateProfileData(
+                                data: {
+                                  "name": userName.text,
+                                  "phone": userPhone.text,
+                                  "email": userEmail.text,
+                                  "password": userPassword.text,
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: defaultButton(
+                            text: ShopCubit.get(context).translation.LogOut,
+                            press: () {
+                              ShopCubit.get(context).logOut(
+                                context,
+                                data: {
+                                  'fcm_token': 'SomeFcmToken',
+                                },
+                              );
+                            }),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

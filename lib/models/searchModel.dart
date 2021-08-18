@@ -1,5 +1,3 @@
-import 'package:flutter_appp/models/home_data.dart';
-
 class SearchData {
   List<SearchProductData> searchProducts = [];
   SearchData.fromJson(List<dynamic> json) {

@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
+import 'package:flutter_appp/Layout/cubit/states.dart';
 import 'package:flutter_appp/Modules/login_screen/login.dart';
 import 'package:flutter_appp/Shared/network/locale/locale.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
@@ -44,13 +45,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ShopCubit()..getTranslation(context),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: lightTheme,
-          home: isLoggedBefore ? App() : LogIn(),
-        ),
+      child: BlocConsumer<ShopCubit, ShopStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            home: isLoggedBefore ? App() : LogIn(),
+          );
+        },
       ),
     );
   }

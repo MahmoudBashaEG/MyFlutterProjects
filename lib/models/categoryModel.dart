@@ -1,23 +1,12 @@
 class CategoryInformation {
   bool status;
   String message;
-  CategoryInformationData data;
+  List<Category> categories = [];
   CategoryInformation.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null
-        ? CategoryInformationData.fromJson(json['data'])
-        : null;
-  }
-}
-
-class CategoryInformationData {
-  int currentPage;
-  List data = [];
-  CategoryInformationData.fromJson(Map<String, dynamic> json) {
-    currentPage = json['current_page'];
-    json['data'].forEach((element) {
-      data.add(Category.fromJson(element));
+    json['data']['data'].forEach((el) {
+      categories.add(Category.fromJson(el));
     });
   }
 }
@@ -25,7 +14,9 @@ class CategoryInformationData {
 class Category {
   String image;
   String name;
+  dynamic id;
   Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     image = json['image'];
     name = json['name'];
   }

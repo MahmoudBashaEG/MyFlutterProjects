@@ -3,7 +3,7 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/cubit.dart';
-import 'package:flutter_appp/Modules/category_products_screen/category_products.dart';
+import 'package:flutter_appp/Modules/category_products_screen/category_products_screen.dart';
 import 'package:flutter_appp/Shared/styles/colors.dart';
 import 'package:flutter_appp/models/categoryModel.dart';
 import 'package:flutter_appp/models/favoriteProducts.dart';
@@ -466,7 +466,7 @@ Widget newsSearchBuilder(List list) => ConditionalBuilder(
 Widget categoryItem(context, Category model) {
   return InkWell(
     onTap: () {
-      navigatorTo(context: context, goTo: ProductsOfCategory());
+      ShopCubit.get(context).getCategoryProducts(id: model.id, category: model);
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(

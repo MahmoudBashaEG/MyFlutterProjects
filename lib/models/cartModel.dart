@@ -1,44 +1,17 @@
+import 'package:flutter_appp/models/ProductModel.dart';
+
 class CartProductsData {
   bool status;
   String message;
-  List<ProductData> cartProducts = [];
+  dynamic total;
+  List<Product> cartProducts = [];
   CartProductsData.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    print(json['data']['cart_items']);
-    print(
-        '------------------------------------------------------------------------------------------------');
+    total = json['data']['total'];
+    print(total);
     json['data']['cart_items'].forEach((element) {
-      print(element['product']);
-      cartProducts.add(ProductData.fromJson(element['product']));
+      cartProducts.add(Product.fromJson(element['product']));
     });
   }
-}
-
-class ProductData {
-  dynamic id;
-  dynamic price;
-  dynamic oldPrice;
-  dynamic discount;
-  String image;
-  String name;
-  String description;
-  bool inFavorite;
-  bool inCart;
-  List<String> images;
-  ProductData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    price = json['price'];
-    oldPrice = json['old_price'];
-    discount = json['discount'];
-    image = json['image'];
-    name = json['name'];
-    description = json['description'];
-    inFavorite = json['in_favorites'];
-    inCart = json['in_cart'];
-  }
-  ProductData({
-    this.price,
-    this.oldPrice,
-  });
 }

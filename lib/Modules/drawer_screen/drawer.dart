@@ -58,13 +58,12 @@ class DrawerScreen extends StatelessWidget {
                   child: Text('Category'),
                 ),
                 ...List.generate(
-                  ShopCubit.get(context).categoryInformation.data.data.length,
+                  ShopCubit.get(context).categoryInformation.categories.length,
                   (index) => drawerCategoryItem(
                       context,
                       ShopCubit.get(context)
                           .categoryInformation
-                          .data
-                          .data[index]),
+                          .categories[index]),
                 ),
                 SizedBox(
                   height: 10,

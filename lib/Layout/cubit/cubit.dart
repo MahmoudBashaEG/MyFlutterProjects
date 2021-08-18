@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appp/Layout/cubit/states.dart';
-import 'package:flutter_appp/Modules/cart.dart';
+import 'package:flutter_appp/Modules/cart_screen/cart.dart';
 import 'package:flutter_appp/Modules/categories_screen/categories.dart';
 import 'package:flutter_appp/Modules/favorites_screen/favorites.dart';
 import 'package:flutter_appp/Modules/home_screen/home.dart';
@@ -17,9 +17,9 @@ import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/network/remote/remote.dart';
 import 'package:flutter_appp/models/cartModel.dart';
 import 'package:flutter_appp/models/categoryModel.dart';
+import 'package:flutter_appp/models/categoryProductsModel.dart';
 import 'package:flutter_appp/models/favoriteProducts.dart';
 import 'package:flutter_appp/models/translate.dart';
-import 'package:flutter_appp/models/updateFavoriteProducts.dart';
 import 'package:flutter_appp/models/home_data.dart';
 import 'package:flutter_appp/models/searchModel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,12 +41,10 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopAppTranslateLoadingState());
     String data;
     if (lan == 'en') {
-      print('en');
       data = await DefaultAssetBundle.of(context)
           .loadString("assets/translation/en.json");
     }
     if (lan == 'ar') {
-      print('ar');
       data = await DefaultAssetBundle.of(context)
           .loadString("assets/translation/ar.json");
     }
@@ -111,24 +109,22 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  FavoriteProductsData productsOfCategory;
-  void getProductsOfCategory({int id}) {
-    emit(GetProductsOfCategoryLoadingState());
+  CategoryProductModel categoryProducts;
+  void getCategoryProducts({int id, Category category}) async {
+    emit(GetCategoryProductsLoadingState());
     DioHelper.getData(
       url: PRODUCTS,
       query: {'category_id': id},
       lan: lan,
       token: allUserData.data.token,
     ).then((value) {
-      productsOfCategory = FavoriteProductsData.fromJson(value.data);
-      emit(GetProductsOfCategorySuccessState());
+      categoryProducts = CategoryProductModel.fromJson(value.data);
+      emit(GetCategoryProductsSuccessState(category: category));
     }).catchError((err) {
       print(err.toString());
-      emit(GetProductsOfCategoryErrorState());
+      emit(GetCategoryProductsErrorState());
     });
   }
-
-  UpdateFavoriteProducts updateFavoriteProduct;
 
   void updateProductFavorite({
     int productId,
@@ -144,13 +140,11 @@ class ShopCubit extends Cubit<ShopStates> {
             url: FAVORITE,
             lan: lan)
         .then((value) {
-      updateFavoriteProduct = UpdateFavoriteProducts.fromJson(value.data);
-      if (updateFavoriteProduct.status) {
-        message(
-            message: updateFavoriteProduct.message, state: MessageType.Succeed);
+      if (value.data['status']) {
+        message(message: value.data['message'], state: MessageType.Succeed);
       }
 
-      if (!updateFavoriteProduct.status)
+      if (!value.data['status'])
         inFavorites[productId] = !inFavorites[productId];
       getProductFavorite();
     }).catchError((error) {
@@ -164,8 +158,11 @@ class ShopCubit extends Cubit<ShopStates> {
 
   void getProductFavorite() {
     emit(GetFavoriteLoadingState());
-    DioHelper.getData(url: FAVORITE, token: allUserData.data.token, lan: lan)
-        .then((value) {
+    DioHelper.getData(
+      url: FAVORITE,
+      token: allUserData.data.token,
+      lan: lan,
+    ).then((value) {
       favoriteProductsData = FavoriteProductsData.fromJson(value.data);
       emit(GetFavoriteSuccessState());
     }).catchError((error) {

@@ -8,6 +8,7 @@ import 'package:flutter_appp/Shared/Components/Components.dart';
 import 'package:flutter_appp/Shared/network/end_points.dart';
 import 'package:flutter_appp/Shared/network/locale/globalUserData.dart';
 import 'package:flutter_appp/Shared/styles/colors.dart';
+import 'package:flutter_appp/models/ProductModel.dart';
 import 'package:flutter_appp/models/home_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,6 +42,40 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+              child: Row(
+            children: [
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: EdgeInsetsDirectional.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(7)),
+                  child: Icon(Icons.add),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                child: Text(
+                  '1',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: EdgeInsetsDirectional.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(7)),
+                  child: Icon(Icons.add),
+                ),
+              ),
+            ],
+          )),
+          Container(
             height: 150,
             child: Carousel(
                 autoplay: true,
@@ -68,9 +103,9 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
                   height: 100,
                   child: ListView.separated(
                     itemBuilder: (context, index) => categoryHome(
-                        cubit.categoryInformation.data.data[index]),
+                        cubit.categoryInformation.categories[index]),
                     scrollDirection: Axis.horizontal,
-                    itemCount: cubit.categoryInformation.data.data.length,
+                    itemCount: cubit.categoryInformation.categories.length,
                     separatorBuilder: (BuildContext context, int index) =>
                         SizedBox(
                       width: 4,
@@ -110,8 +145,7 @@ Widget homeBuilder(ShopCubit cubit, context) => SingleChildScrollView(
       ),
     );
 
-Widget productGridViewBuilder(
-        ShopCubit cubit, GetHomeProductData product, context) =>
+Widget productGridViewBuilder(ShopCubit cubit, Product product, context) =>
     Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

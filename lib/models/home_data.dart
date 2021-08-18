@@ -1,3 +1,5 @@
+import 'package:flutter_appp/models/ProductModel.dart';
+
 class HomeData {
   bool status;
   String message;
@@ -11,13 +13,13 @@ class HomeData {
 
 class UserProducts {
   List<BannerData> banners = [];
-  List<GetHomeProductData> products = [];
+  List<Product> products = [];
   UserProducts.fromJson(Map<String, dynamic> json) {
     json['banners'].forEach((element) {
       banners.add(BannerData.fromJson(element));
     });
     json['products'].forEach((element) {
-      products.add(GetHomeProductData.fromJson(element));
+      products.add(Product.fromJson(element));
     });
   }
 }
@@ -28,31 +30,5 @@ class BannerData {
   BannerData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     image = json['image'];
-  }
-}
-
-class GetHomeProductData {
-  dynamic id;
-  dynamic price;
-  dynamic oldPrice;
-  dynamic discount;
-  String image;
-  String name;
-  String description;
-  List images;
-  bool inFavourite;
-  bool inCart;
-
-  GetHomeProductData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    price = json['price'];
-    oldPrice = json['old_price'];
-    discount = json['discount'];
-    image = json['image'];
-    name = json['name'];
-    description = json['description'];
-    images = json['images'];
-    inFavourite = json['in_favorites'];
-    inCart = json['in_cart'];
   }
 }
